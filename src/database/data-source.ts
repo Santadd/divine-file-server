@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
+import { CreateUsersTable1677228960020 } from "./migrations/1677228960020-CreateUsersTable";
 
 
 // load the .env
@@ -18,4 +19,7 @@ export const appDataSource = new DataSource({
     logging: true,
     subscribers: [],
     entities: [],
+    migrations: [
+        CreateUsersTable1677228960020,
+    ]
 })
