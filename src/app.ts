@@ -2,6 +2,7 @@ import express, {Express, NextFunction, Request, Response} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import usersRouter from "./routers/usersRouter"
+import filesRouter from "./routers/businessFilesRouter";
 import { EntityNotFoundError } from "typeorm";
 import { ResponseUtil } from "./utils/Response";
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 
 // region routes
 app.use("/api/users", usersRouter);
+app.use("/api/files", filesRouter);
 
 // end region routes
 
