@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm"
 import { DBTable } from "../../constants/DBTable"
-import { Role } from "../../constants/Role"
+import { Roles } from "../../constants/Roles"
 
 export class CreateUsersTable1677228960020 implements MigrationInterface {
 
@@ -15,6 +15,7 @@ export class CreateUsersTable1677228960020 implements MigrationInterface {
                         isPrimary: true,
                         isUnique: true,
                         generationStrategy: "uuid",
+                        default: "uuid_generate_v4()",
                     },
                     {
                         name: "email",
@@ -30,7 +31,7 @@ export class CreateUsersTable1677228960020 implements MigrationInterface {
                     {
                         name: "role",
                         type: "int",
-                        default: Role.USER,
+                        default: Roles.USER,
                     },
                     {
                         name: "isVerified",
