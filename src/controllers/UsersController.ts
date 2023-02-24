@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { appDataSource } from "../database/data-source";
 import { User } from "../database/entities/UserEntity";
+import { ResponseUtil } from "../utils/Response";
 
 export class UsersController {
     // Get users function
@@ -22,11 +23,7 @@ export class UsersController {
         const user = await appDataSource.getRepository(User).findOneByOrFail({
             id: id,
         });
-        return res.status(200).json({
-            success: true,
-            message: "Fetched user successfully",
-            data: user
-        });
+        return ResponseUtil.sendResponse(res, "Fetched user successfully", user);
     }
 
 }

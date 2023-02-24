@@ -1,7 +1,9 @@
-import express, {Express} from "express";
+import express, {Express, NextFunction, Request, Response} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import usersRouter from "./routers/usersRouter"
+import { EntityNotFoundError } from "typeorm";
+import { ResponseUtil } from "./utils/Response";
 
 const app: Express = express();
 
@@ -16,11 +18,26 @@ app.use("/api/users", usersRouter);
 
 // end region routes
 
-app.get("/hello", (req, res, next) => {
-    return res.status(200).json({
-        message: "Hello World"
+// Handle requests not defined in any of the routes
+app.use("*", (req: Request, res: Response) => {
+    return res.status(404).json({
+        success: false,
+        message: "The resource referenced in the URL was not found"
     })
 });
 
+// Define middleware function to handle Errors
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    // if entity is not found (resource is not found)
+    if (err instanceof EntityNotFoundError) {
+        return ResponseUtil.sendError(res, "Item or page you are looking for does not exist", 404, null)
+    }
+
+    // generic response
+    return res.status(500).send({
+        success: false,
+        message: "Something went wrong"
+    });
+});
 
 export default app;
