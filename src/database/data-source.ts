@@ -3,6 +3,8 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { CreateUsersTable1677228960020 } from "./migrations/1677228960020-CreateUsersTable";
 import { User } from "./entities/UserEntity";
+import { BusinessFile } from "./entities/BusinessFileEntity";
+import { CreateBusinessFilesTable1677255017578 } from "./migrations/1677255017578-CreateBusinessFilesTable";
 
 
 // load the .env
@@ -21,8 +23,10 @@ export const appDataSource = new DataSource({
     subscribers: [],
     entities: [
         User,
+        BusinessFile,
     ],
     migrations: [
         CreateUsersTable1677228960020,
+        CreateBusinessFilesTable1677255017578,
     ]
 })
