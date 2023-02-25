@@ -13,3 +13,17 @@ export class UploadFileDTO {
     @IsString()
     description: string
 }
+
+// Update a file
+export class UpdateFileDTO {
+
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(3)
+    @MaxLength(25)
+    title: string
+
+    @IsNotEmpty()
+    @IsString()
+    description: string
+}

@@ -3,7 +3,7 @@ import { appDataSource } from "../database/data-source";
 import { ResponseUtil } from "../utils/Response";
 import { Paginator } from "../database/Paginator";
 import { BusinessFile } from "../database/entities/BusinessFileEntity";
-import { UploadFileDTO } from "../dtos/BusinessFileDTO";
+import { UpdateFileDTO, UploadFileDTO } from "../dtos/BusinessFileDTO";
 import { validate } from "class-validator";
 
 export class BusinessFilesController {
@@ -28,7 +28,7 @@ export class BusinessFilesController {
     }
 
     // Upload a file
-    async uploadFile(req: Request, res: Response, next: NextFunction) {
+    async uploadFile(req: Request, res: Response, next: NextFunction): Promise<Response> {
         // get the file data
         const fileData = req.body;
         // Get the file
@@ -50,7 +50,39 @@ export class BusinessFilesController {
         await repo.save(businessFile)
 
         return ResponseUtil.sendResponse(res, "File uploaded successfully", businessFile)
+    }
 
+    // Update a file
+    async updateFile(req: Request, res: Response, next: NextFunction) {
+        // Get the id of the file
+        const {id} = req.params;
+        
+        // Check if id exists
+        const repo = appDataSource.getRepository(BusinessFile)
+        const businessFile = await repo.findOneByOrFail({
+            id: id,
+        });
+
+        // Get the data
+        const fileData = req.body;
+
+        // Create a dto
+        const dto = new UpdateFileDTO()
+        Object.assign(dto, fileData);
+
+        // perform validations
+        const errors = await validate(dto);
+
+        // return errors if there are
+        if (errors.length > 0) {
+            return ResponseUtil.sendError(res, "Invalid data", 422, errors);
+        }
+
+        // update the data
+        repo.merge(businessFile, fileData);
+        await repo.save(businessFile);
+
+        return ResponseUtil.sendResponse(res, "File updated successfully", businessFile);
     }
 
 }
