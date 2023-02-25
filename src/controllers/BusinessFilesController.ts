@@ -3,6 +3,8 @@ import { appDataSource } from "../database/data-source";
 import { ResponseUtil } from "../utils/Response";
 import { Paginator } from "../database/Paginator";
 import { BusinessFile } from "../database/entities/BusinessFileEntity";
+import { UploadFileDTO } from "../dtos/BusinessFileDTO";
+import { validate } from "class-validator";
 
 export class BusinessFilesController {
     // Get business files function
@@ -29,12 +31,22 @@ export class BusinessFilesController {
     async uploadFile(req: Request, res: Response, next: NextFunction) {
         // get the file data
         const fileData = req.body;
+        // Get the file
+        fileData.file = req.file?.filename
 
-        console.log("This is the data", fileData)
+        // Create a dto
+        const dto = new UploadFileDTO()
+        Object.assign(dto, fileData);
+
+        // perform validations
+        const errors = await validate(dto);
+
+        if (errors.length > 0) {
+            return ResponseUtil.sendError(res, "Invalid data", 422, errors);
+        }
         const repo = appDataSource.getRepository(BusinessFile);
 
         const businessFile = repo.create(fileData);
-        console.log("This is business file entity", businessFile)
         await repo.save(businessFile)
 
         return ResponseUtil.sendResponse(res, "File uploaded successfully", businessFile)
