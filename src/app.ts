@@ -5,6 +5,7 @@ import usersRouter from "./routers/usersRouter"
 import filesRouter from "./routers/businessFilesRouter";
 import { EntityNotFoundError } from "typeorm";
 import { ResponseUtil } from "./utils/Response";
+import { ErrorHandler } from "./middlewares/ErrorHandler";
 
 const app: Express = express();
 
@@ -31,23 +32,7 @@ app.use("*", (req: Request, res: Response) => {
 });
 
 // Define middleware function to handle Errors
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    console.log(err, "All errors")
-    // if entity is not found (resource is not found)
-    if (err instanceof EntityNotFoundError) {
-        return ResponseUtil.sendError(res, "Item or page you are looking for does not exist", 404, null)
-    }
+app.use(ErrorHandler.handleErrors)
 
-    // if filetype is not accepted
-    if (err.message === "Invalid file type") {
-        return ResponseUtil.sendError(res, "Invalid file type", 422, null)
-    }
-
-    // generic response
-    return res.status(500).send({
-        success: false,
-        message: "Something went wrong"
-    });
-});
 
 export default app;

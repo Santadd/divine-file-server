@@ -1,5 +1,5 @@
 import express from "express";
-import { ErrorHandler } from "../utils/ErrorHandler";
+import { ErrorHandler } from "../middlewares/ErrorHandler";
 import { BusinessFilesController } from "../controllers/BusinessFilesController";
 import { FileUploader } from "../middlewares/FileUploader";
 
@@ -11,18 +11,18 @@ const router = express.Router();
 const filesController = new BusinessFilesController();
 
 // Get files router
-router.get("/", ErrorHandler.handleErrors(filesController.getFiles));
-router.get("/:id", ErrorHandler.handleErrors(filesController.getFile));
+router.get("/", ErrorHandler.catchErrors(filesController.getFiles));
+router.get("/:id", ErrorHandler.catchErrors(filesController.getFile));
 // upload file
 router.post(
   "/upload",
   FileUploader.upload("file", "businessfiles", 2 * 1024 * 1024),
-  ErrorHandler.handleErrors(filesController.uploadFile)
+  ErrorHandler.catchErrors(filesController.uploadFile)
 );
 // Update a file
-router.put("/:id", ErrorHandler.handleErrors(filesController.updateFile));
+router.put("/:id", ErrorHandler.catchErrors(filesController.updateFile));
 // Delete a file
-router.delete("/:id", ErrorHandler.handleErrors(filesController.deleteFile));
+router.delete("/:id", ErrorHandler.catchErrors(filesController.deleteFile));
 
 
 
