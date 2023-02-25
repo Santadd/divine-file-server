@@ -85,4 +85,20 @@ export class BusinessFilesController {
         return ResponseUtil.sendResponse(res, "File updated successfully", businessFile);
     }
 
+    // Delete a file
+    async deleteFile(req: Request, res: Response, next: NextFunction): Promise<Response> {
+
+        // get file id from the request
+        const {id} = req.params;
+        const repo = appDataSource.getRepository(BusinessFile)
+        // Check if file exists
+        const businessFile = await repo.findOneByOrFail({
+            id: id,
+        });
+
+        await repo.remove(businessFile);
+
+        return ResponseUtil.sendResponse(res, "File deleted successfully", null);
+        
+    }
 }

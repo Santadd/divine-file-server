@@ -20,7 +20,9 @@ router.post(
   ErrorHandler.handleErrors(filesController.uploadFile)
 );
 // Update a file
-router.put("/:id", ErrorHandler.handleErrors(filesController.updateFile))
+router.put("/:id", ErrorHandler.handleErrors(filesController.updateFile));
+// Delete a file
+router.delete("/:id", ErrorHandler.handleErrors(filesController.deleteFile));
 
 
 
