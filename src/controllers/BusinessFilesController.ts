@@ -69,6 +69,7 @@ export class BusinessFilesController {
         // Create a dto
         const dto = new UpdateFileDTO()
         Object.assign(dto, fileData);
+        dto.id = parseInt(id)
 
         // perform validations
         const errors = await validate(dto);
