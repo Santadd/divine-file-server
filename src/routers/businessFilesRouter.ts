@@ -12,8 +12,9 @@ const filesController = new BusinessFilesController();
 
 // Get files router
 router.get("/", ErrorHandler.catchErrors(filesController.getFiles));
+// get a file
 router.get("/:id", ErrorHandler.catchErrors(filesController.getFile));
-// upload file
+// upload file (post a file)
 router.post(
   "/upload",
   FileUploader.upload("file", "businessfiles", 2 * 1024 * 1024),

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { EntityNotFoundError } from "typeorm";
 import { ResponseUtil } from "../utils/Response";
+import { ValidationError } from "class-validator";
 
 export class ErrorHandler {
   static catchErrors(fn) {
@@ -26,6 +27,12 @@ export class ErrorHandler {
       );
     }
 
+    // call the format Errors
+    if (err.length > 0 && err[0] instanceof ValidationError) {
+      const errors = ErrorHandler.formatErrors(err);
+      return ResponseUtil.sendError(res, "Invalid Input", 422, errors)
+    }
+
     // if filetype is not accepted
     if (err.message === "Invalid file type") {
       return ResponseUtil.sendError(res, "Invalid file type", 422, null);
@@ -36,5 +43,18 @@ export class ErrorHandler {
       success: false,
       message: "Something went wrong",
     });
+  }
+
+  // format errors
+  static formatErrors(err: any) {
+    const errors = {}
+    err.forEach((e) => {
+      if (!errors[e.property]) {
+        errors[e.property] = [];
+      }
+      errors[e.property].push(e.constraints[Object.keys(e.constraints)[0]])
+    });
+
+    return errors;
   }
 }

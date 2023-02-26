@@ -4,7 +4,7 @@ import { ResponseUtil } from "../utils/Response";
 import { Paginator } from "../database/Paginator";
 import { BusinessFile } from "../database/entities/BusinessFileEntity";
 import { UpdateFileDTO, UploadFileDTO } from "../dtos/BusinessFileDTO";
-import { validate } from "class-validator";
+import { validate, validateOrReject } from "class-validator";
 
 export class BusinessFilesController {
     // Get business files function
@@ -39,11 +39,11 @@ export class BusinessFilesController {
         Object.assign(dto, fileData);
 
         // perform validations
-        const errors = await validate(dto);
+        await validateOrReject(dto);
 
-        if (errors.length > 0) {
-            return ResponseUtil.sendError(res, "Invalid data", 422, errors);
-        }
+        // if (errors.length > 0) {
+        //     return ResponseUtil.sendError(res, "Invalid data", 422, errors);
+        // }
         const repo = appDataSource.getRepository(BusinessFile);
 
         const businessFile = repo.create(fileData);
@@ -72,12 +72,12 @@ export class BusinessFilesController {
         dto.id = parseInt(id)
 
         // perform validations
-        const errors = await validate(dto);
+        await validateOrReject(dto);
 
-        // return errors if there are
-        if (errors.length > 0) {
-            return ResponseUtil.sendError(res, "Invalid data", 422, errors);
-        }
+        // // return errors if there are
+        // if (errors.length > 0) {
+        //     return ResponseUtil.sendError(res, "Invalid data", 422, errors);
+        // }
 
         // update the data
         repo.merge(businessFile, fileData);
