@@ -13,6 +13,8 @@ const authController = new AuthController()
 router.post("/register", ErrorHandler.catchErrors(authController.register))
 // Login route
 router.post("/login", ErrorHandler.catchErrors(authController.login));
+// Confirm account
+router.get("/emailconfirmation/:token", ErrorHandler.catchErrors(authController.verifyAccount))
 
 
 

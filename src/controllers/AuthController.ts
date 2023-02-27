@@ -36,6 +36,7 @@ export class AuthController {
         const token = GeneralUtils.generateVerificationToken(
             {
                 userId: userId, 
+                tokenType: "user_email_verify",
             }
         )
 
@@ -94,5 +95,43 @@ export class AuthController {
         }
 
         return ResponseUtil.sendResponse(res, "Login successfull", response);
+    }
+
+    // verify users account
+    async verifyAccount(req: Request, res: Response, next: NextFunction) {
+        // Get token from the request params
+        const token = req.params.token;
+
+        // Verify the token
+        const payload = GeneralUtils.validateVerificationToken(token)
+
+        // false token
+        if (!payload) {
+            return ResponseUtil.sendError(res, "Invalid or expired token", 401, null);
+        }
+
+        // Check for token Type
+        if (payload["tokenType"] !== "user_email_verify" || !payload["userId"]) {
+            return ResponseUtil.sendError(res, "Invalid Request", 403, null)
+        }
+
+        // Get the user
+        const repo = appDataSource.getRepository(User)
+
+        const user = await repo.findOneBy({
+            id: payload["userId"]
+        })
+
+        if (!user) {
+            return ResponseUtil.sendError(res, "User not found", 404, null)
+        } 
+        else if (user.isVerified) {
+            return ResponseUtil.sendResponse(res, "User is already verified", null)
+        }
+        // change verified status
+        user.isVerified = true
+        await repo.save(user)
+
+        return ResponseUtil.sendResponse(res, "Email confirmed successfully", user.toResponse())
     }
 }
