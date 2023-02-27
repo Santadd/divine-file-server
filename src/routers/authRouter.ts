@@ -11,6 +11,8 @@ const authController = new AuthController()
 
 // Register route
 router.post("/register", ErrorHandler.catchErrors(authController.register))
+// Login route
+router.post("/login", ErrorHandler.catchErrors(authController.login));
 
 
 

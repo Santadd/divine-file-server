@@ -27,4 +27,15 @@ export class User {
     async hashPassword() {
         this.password = await hash(this.password, 12);
     }
+
+    toResponse(): Partial<User> {
+        
+        const userResponse = new User()
+        userResponse.id = this.id
+        userResponse.email = this.email
+        userResponse.isVerified = this.isVerified
+        userResponse.role = this.role
+
+        return userResponse
+    }
 }

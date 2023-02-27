@@ -6,12 +6,12 @@ import { ResponseUtil } from "../utils/Response";
 import { MailService } from "../services/mailService";
 import { verifyEmailTemplate } from "../templates/verifyEmailTemplate";
 import { GeneralUtils } from "../utils/generalUtils";
-import { RegisterDTO } from "../dtos/AuthDTO";
+import { LoginDTO, RegisterDTO } from "../dtos/AuthDTO";
+import { compare } from "bcryptjs";
 
 
 export class AuthController {
 
-    
     // Register users
     async register(req: Request, res: Response, next: NextFunction): Promise<Response> {
         // Get the registration data
@@ -55,5 +55,44 @@ export class AuthController {
         })
 
         return ResponseUtil.sendResponse(res, "User has been registered successfully", newUser)
+    }
+
+    // Login users
+    async login(req: Request, res: Response, next: NextFunction): Promise<Response> {
+        // Get login data
+        const {email, password} = req.body;
+
+        const dto = new LoginDTO()
+        dto.email = email;
+        dto.password = password;
+
+        // validate input
+        await validateOrReject(dto)
+
+        const repo = appDataSource.getRepository(User);
+        // Check for user email
+        const user = await repo.findOneBy({email});
+        // if no user is found
+        if (!user) {
+            return ResponseUtil.sendError(res, "Invalid credentials. Please try again", 401, null)
+        }
+        // Password not matching
+        const isValidPassword = await compare(password, user.password);
+        if (!isValidPassword) {
+            return ResponseUtil.sendError(res, "Invalid credentials.", 401, null)
+        }
+        // Check for verification status
+        if (!user.isVerified) {
+            return ResponseUtil.sendError(res, "Please confirm your account and try again", 401, null)
+        }
+
+        const token = GeneralUtils.generateLoginToken(user)
+
+        const response = {
+            user: user.toResponse(),
+            accessToken: token.accessToken,
+        }
+
+        return ResponseUtil.sendResponse(res, "Login successfull", response);
     }
 }

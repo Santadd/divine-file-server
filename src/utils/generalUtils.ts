@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
+import { User } from "../database/entities/UserEntity";
+import { Response } from "express";
 
 
 export class GeneralUtils {
 
-    // Generate vonfirmation token with payload and options as parameters
+    // Generate confirmation token with payload and options as parameters
     // Payload contains data to be set as JWT Payload
     // Options contain jwt options
     static generateVerificationToken(payload: object, options: object={}) {
@@ -27,5 +29,18 @@ export class GeneralUtils {
             console.log(err);
         }
         return false
+    }
+
+    // generate Login Token
+    static generateLoginToken(user: User) {
+        const accessToken = this.generateVerificationToken(
+            {
+                userId: user.id,
+                tokenType: "user_access"
+            }
+        );
+        return {
+            accessToken: accessToken
+        }
     }
 }

@@ -19,3 +19,15 @@ export class RegisterDTO {
     // TODO: fix confirm password
     // confirmPassword: string
 }
+
+export class LoginDTO {
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    @MinLength(5)
+    @MaxLength(20)
+    password: string;
+}
