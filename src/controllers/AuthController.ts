@@ -6,8 +6,9 @@ import { ResponseUtil } from "../utils/Response";
 import { MailService } from "../services/mailService";
 import { verifyEmailTemplate } from "../templates/verifyEmailTemplate";
 import { GeneralUtils } from "../utils/generalUtils";
-import { LoginDTO, RegisterDTO } from "../dtos/AuthDTO";
-import { compare } from "bcryptjs";
+import { ForgotPasswordDTO, LoginDTO, RegisterDTO, ResetPasswordDTO } from "../dtos/AuthDTO";
+import { compare, hash } from "bcryptjs";
+import { resetPasswordTemplate } from "../templates/resetPasswordTemplate";
 
 
 export class AuthController {
@@ -133,5 +134,111 @@ export class AuthController {
         await repo.save(user)
 
         return ResponseUtil.sendResponse(res, "Email confirmed successfully", user.toResponse())
+    }
+
+    // Forgot password
+    async forgotPassword(req: Request, res: Response, next: NextFunction) {
+        // Get the email from the request data
+        const {email} = req.body
+
+        const dto = new ForgotPasswordDTO()
+        dto.email = email
+
+        // validate the data
+        await validateOrReject(dto)
+
+        // Lookup for user
+        const repo = appDataSource.getRepository(User);
+        // Check for user email
+        const user = await repo.findOneBy({email: email});
+        if (!user) {
+            return ResponseUtil.sendError(res, "Invalid email address", 400, null)
+        }
+        // If user is not verified
+        if (!user.isVerified) {
+            return ResponseUtil.sendError(res, "Please confirm your account", 401, null)
+        }
+
+        // Generate token
+        const token = GeneralUtils.generateVerificationToken(
+            {
+                userId: user.id,
+                tokenType: "forgot_password",
+            }
+        )
+        // Get password verificationUrl
+        const reqOriginAddress = `${req.protocol}://${req.get('host')}`;
+        const passwordVerificationUrl = `${reqOriginAddress}/api/auth/reset_password_request/${token}`
+        // Create email template
+        const htmlTemplate = resetPasswordTemplate(user.email, passwordVerificationUrl);
+        
+
+        // Send the email
+        MailService.sendMail({
+            from: "divine.duah@amalitech.org",
+            to: user.email,
+            subject: "Reset Password",
+            html: htmlTemplate.html
+        });
+
+        return ResponseUtil.sendResponse(res, "An email with instructions to reset password has been sent", null)
+    }
+
+    // Verify Password Reset Request
+    async verifyPasswordResetRequest(req: Request, res: Response, nex: NextFunction) {
+
+        // Get token from the request params
+        const token = req.params.token;
+
+        // Verify the token
+        const payload = GeneralUtils.validateVerificationToken(token)
+
+        // false token
+        if (!payload) {
+            return ResponseUtil.sendError(res, "Invalid or expired token", 401, null);
+        }
+
+        // Check for token Type
+        if (payload["tokenType"] !== "forgot_password" || !payload["userId"]) {
+            return ResponseUtil.sendError(res, "Invalid Request", 403, null)
+        }
+
+        return ResponseUtil.sendResponse(res, "You can now reset the password", null)
+    }
+
+    // reset password
+    async resetPassword(req: Request, res: Response, next: NextFunction) {
+        // Get the email and password from the form
+        const {email, password} = req.body
+
+        const dto = new ResetPasswordDTO();
+        dto.email = email
+        dto.password = password
+
+        // Perform Validations
+        await validateOrReject(dto);
+
+        // Lookup for user
+        const repo = appDataSource.getRepository(User);
+
+        // Check for user email
+        const user = await repo.findOneBy({email: email});
+        if (!user) {
+            return ResponseUtil.sendError(res, "Invalid email address", 400, null)
+        }
+        // If user is not verified
+        if (!user.isVerified) {
+            return ResponseUtil.sendError(res, "Please confirm your account", 401, null)
+        }
+
+        console.log(password, email, "I have them here");
+        
+        // Hash the new password
+        const hashedPassword = await hash(password, 12);
+        user.password = hashedPassword
+
+        await repo.save(user)
+
+        return ResponseUtil.sendResponse(res, "Password reset completed successfully", null)
     }
 }
