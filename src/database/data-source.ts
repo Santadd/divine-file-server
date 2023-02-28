@@ -5,6 +5,8 @@ import { CreateUsersTable1677228960020 } from "./migrations/1677228960020-Create
 import { User } from "./entities/UserEntity";
 import { BusinessFile } from "./entities/BusinessFileEntity";
 import { CreateBusinessFilesTable1677255017578 } from "./migrations/1677255017578-CreateBusinessFilesTable";
+import { Download } from "./entities/DownloadEntity";
+import { CreateDownloadsTable1677578291185 } from "./migrations/1677578291185-CreateDownloadsTable";
 
 
 // load the .env
@@ -24,9 +26,11 @@ export const appDataSource = new DataSource({
     entities: [
         User,
         BusinessFile,
+        Download,
     ],
     migrations: [
         CreateUsersTable1677228960020,
         CreateBusinessFilesTable1677255017578,
+        CreateDownloadsTable1677578291185,
     ]
 })

@@ -41,7 +41,8 @@ export class CreateBusinessFilesTable1677255017578 implements MigrationInterface
                         isNullable: false,
                     }
                 ]
-            })
+            }),
+            true
         )
     }
 

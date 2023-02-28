@@ -39,7 +39,8 @@ export class CreateUsersTable1677228960020 implements MigrationInterface {
                         default: false
                     }
                 ]
-            })
+            }),
+            true
         )
     }
 

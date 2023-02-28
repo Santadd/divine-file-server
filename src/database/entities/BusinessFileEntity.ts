@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DBTable } from "../../constants/DBTable";
+import { Download } from "./DownloadEntity";
 
 
 @Entity(DBTable.BUSINESSFILES)
@@ -19,5 +20,8 @@ export class BusinessFile {
 
     @CreateDateColumn()
     dateAdded: Date
+
+    @OneToMany((type) => Download, (download) => download.businessfile)
+    downloads: Download[]
 
 }

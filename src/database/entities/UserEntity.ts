@@ -1,7 +1,8 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DBTable } from "../../constants/DBTable";
 import { Roles } from "../../constants/Roles";
 import {hash} from "bcryptjs"
+import { Download } from "./DownloadEntity";
 
 
 @Entity(DBTable.USERS)
@@ -27,6 +28,9 @@ export class User {
     async hashPassword() {
         this.password = await hash(this.password, 12);
     }
+
+    @OneToMany(() => Download, (download) => download.user)
+    downloads: Download[]
 
     toResponse(): Partial<User> {
         
