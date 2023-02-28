@@ -42,5 +42,12 @@ router.delete(
   ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(filesController.deleteFile)
 );
+// Download a file
+router.get(
+  "/download/:id",
+  ErrorHandler.catchErrors(AuthMiddleware.authenticate),
+  ErrorHandler.catchErrors(filesController.downloadFile)
+);
+
 
 export default router;

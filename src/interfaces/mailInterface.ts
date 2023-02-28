@@ -6,4 +6,5 @@ export interface MailInterface {
     subject: string;
     text?: string;
     html: string;
+    attachments?: object[]
 }

@@ -5,6 +5,11 @@ import { Paginator } from "../database/Paginator";
 import { BusinessFile } from "../database/entities/BusinessFileEntity";
 import { UpdateFileDTO, UploadFileDTO } from "../dtos/BusinessFileDTO";
 import { validate, validateOrReject } from "class-validator";
+import { User } from "../database/entities/UserEntity";
+import { Download } from "../database/entities/DownloadEntity";
+import { downloadFileTemplate } from "../templates/downloadFileTemplate";
+import { GeneralUtils } from "../utils/generalUtils";
+import { MailService } from "../services/mailService";
 
 export class BusinessFilesController {
     // Get business files function
@@ -101,5 +106,54 @@ export class BusinessFilesController {
 
         return ResponseUtil.sendResponse(res, "File deleted successfully", null);
         
+    }
+
+    // Download a file
+    async downloadFile(req: Request, res: Response, next: NextFunction) {
+
+        // get file id from the request
+        const {id} = req.params;
+
+        // Get the auth payload from the request
+        const payload = req["tokenPayload"]
+        const userId = payload["userId"]
+
+        // Look up for user
+        const userRepo = appDataSource.getRepository(User);
+        const user = await userRepo.findOneBy({id: userId})
+        if (!user) {
+            return ResponseUtil.sendError(res, "User not found", 404, null)
+        }
+        
+        // lookup for file
+        const fileRepo = appDataSource.getRepository(BusinessFile)
+        // Check if file exists
+        const businessFile = await fileRepo.findOneByOrFail({
+            id: id,
+        });
+        
+        // Save file to downloads
+        const downloadRepo = appDataSource.getRepository(Download);
+        const download = downloadRepo.create({
+            user: user,
+            businessfile: businessFile
+        })
+
+        // Send File via email to user
+        const htmlTemplate = downloadFileTemplate(user.email);
+
+        MailService.sendMail({
+            from: "divine.duah@amalitech.org",
+            to: user.email,
+            subject: "Requested File",
+            html: htmlTemplate.html,
+            attachments: [
+                {filename: `${businessFile.file}`, path: `./uploads/businessfiles/${businessFile.file}`}
+            ]
+        });
+
+        await downloadRepo.save(download);
+
+        return ResponseUtil.sendResponse(res, "File has been sent successfully via email", null);
     }
 }

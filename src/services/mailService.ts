@@ -16,7 +16,8 @@ export class MailService {
                 bcc: options.bcc,
                 subject: options.subject,
                 text: options.text,
-                html: options.html
+                html: options.html,
+                attachments: options.attachments,
             });
             console.log(`Message sent ${info.messageId}`);
             return true
