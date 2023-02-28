@@ -1,6 +1,8 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DBTable } from "../../constants/DBTable";
 import { Download } from "./DownloadEntity";
+import { GeneralUtils } from "../../utils/generalUtils";
+import { Request} from "express";
 
 
 @Entity(DBTable.BUSINESSFILES)
@@ -23,5 +25,16 @@ export class BusinessFile {
 
     @OneToMany((type) => Download, (download) => download.businessfile)
     downloads: Download[]
+
+    toPayload(req: Request): Partial<BusinessFile> {
+        
+        return {
+            id: this.id,
+            title: this.title,
+            description: this.description,
+            file: GeneralUtils.businessFileUrl(req, "businessfiles", this.file),
+            dateAdded: this.dateAdded
+        }
+    }
 
 }

@@ -4,12 +4,13 @@ import { ResponseUtil } from "../utils/Response";
 import { Paginator } from "../database/Paginator";
 import { BusinessFile } from "../database/entities/BusinessFileEntity";
 import { UpdateFileDTO, UploadFileDTO } from "../dtos/BusinessFileDTO";
-import { validate, validateOrReject } from "class-validator";
+import { validateOrReject } from "class-validator";
 import { User } from "../database/entities/UserEntity";
 import { Download } from "../database/entities/DownloadEntity";
 import { downloadFileTemplate } from "../templates/downloadFileTemplate";
-import { GeneralUtils } from "../utils/generalUtils";
 import { MailService } from "../services/mailService";
+import path from "path";
+import fs from "fs";
 
 export class BusinessFilesController {
     // Get business files function
@@ -17,7 +18,11 @@ export class BusinessFilesController {
         const builder = appDataSource.getRepository(BusinessFile).createQueryBuilder().orderBy("id", "DESC");
 
         const {records: businessFiles, paginationInfo} = await Paginator.paginate(builder, req)
-        return ResponseUtil.sendResponse(res, "Fetched files successfully", businessFiles, paginationInfo)
+
+        const fileData = businessFiles.map((file: BusinessFile) => {
+            return file.toPayload(req)
+        })
+        return ResponseUtil.sendResponse(res, "Fetched files successfully", fileData, paginationInfo)
         
     }
 
@@ -29,7 +34,8 @@ export class BusinessFilesController {
         const businessFile = await appDataSource.getRepository(BusinessFile).findOneByOrFail({
             id: id,
         });
-        return ResponseUtil.sendResponse(res, "Fetched file successfully", businessFile);
+
+        return ResponseUtil.sendResponse(res, "Fetched file successfully", businessFile.toPayload(req));
     }
 
     // Upload a file
@@ -88,7 +94,7 @@ export class BusinessFilesController {
         repo.merge(businessFile, fileData);
         await repo.save(businessFile);
 
-        return ResponseUtil.sendResponse(res, "File updated successfully", businessFile);
+        return ResponseUtil.sendResponse(res, "File updated successfully", businessFile.toPayload(req));
     }
 
     // Delete a file
@@ -124,7 +130,7 @@ export class BusinessFilesController {
         if (!user) {
             return ResponseUtil.sendError(res, "User not found", 404, null)
         }
-        
+
         // lookup for file
         const fileRepo = appDataSource.getRepository(BusinessFile)
         // Check if file exists
@@ -155,5 +161,62 @@ export class BusinessFilesController {
         await downloadRepo.save(download);
 
         return ResponseUtil.sendResponse(res, "File has been sent successfully via email", null);
+    }
+
+    // Get file Url
+    async getFileUrl(req: Request, res: Response, next: NextFunction) {
+        // get the absolute url of the image
+
+        // abc.com/api/files/{documents}/{id}
+        const {documents, id} = req.params;
+        const fileTypes = ["businessfiles"];
+        // Check for correct filetype
+        if (!fileTypes.includes(documents)) {
+            return ResponseUtil.sendError(res, "File is Invalid", 500, null);
+        }
+
+        // Generate file path for the requested document
+        let filepath = path.join(__dirname, "../../", "uploads", documents, id);
+
+        if(!fs.existsSync(filepath)) {
+            return ResponseUtil.sendError(res, "Document cannot not be found", 404, null);
+        }
+
+        // Get the extension of the file (Used to set appropriate header)
+        const fileext = id.split(".")[1]
+
+        try {
+            fs.readFile(filepath, (err, data) => {
+
+                if(err) {
+                    return ResponseUtil.sendError(res, "Invalid file / file read error", 400, null);
+                }
+                // if no error set appropriate response header
+                else if (fileext === "jpeg" || fileext === "jpg") {
+                    res.set('Content-Type', 'image/jpeg')
+                }
+                else if (fileext === "png") {
+                    res.set('Content-Type', 'image/png')
+                }
+                else if (fileext === "pdf") {
+                    res.set('Content-Type', 'application/pdf')
+                }
+                else if (fileext === "doc") {
+                    res.set('Content-Type', 'application/msword')
+                }
+                else if (fileext === "docx") {
+                    res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                }
+                else {
+                    return ResponseUtil.sendError(res, "Invalid File Type", 400, null);
+                }
+                res.send(data)
+            })
+        } 
+        catch (error) {
+            return ResponseUtil.sendError(res, "Bad request", 400, null);
+        }
+        
+
     }
 }

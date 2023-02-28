@@ -48,6 +48,10 @@ router.get(
   ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(filesController.downloadFile)
 );
+// Get file URL
+router.get("/:documents/:id", ErrorHandler.catchErrors(filesController.getFileUrl));
+
+
 
 
 export default router;

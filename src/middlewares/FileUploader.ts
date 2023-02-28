@@ -8,7 +8,13 @@ export class FileUploader {
     fileFieldName: string,
     folderName: string,
     fileSize: number,
-    fileTypes: string[] = ["image/jpeg", "image/png"]
+    fileTypes: string[] = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ]
   ) {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {

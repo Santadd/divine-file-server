@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../database/entities/UserEntity";
-import { Response } from "express";
+import { Request} from "express";
 
 
 export class GeneralUtils {
@@ -42,5 +42,13 @@ export class GeneralUtils {
         return {
             accessToken: accessToken
         }
+    }
+
+
+    // Generate business file Url
+    static businessFileUrl(req: Request, entityType: string, fileId: string) {
+        const reqOriginAddress = `${req.protocol}://${req.hostname}:${process.env.APP_PORT}`
+        
+        return `${reqOriginAddress}/api/files/${entityType}/${fileId}`
     }
 }
