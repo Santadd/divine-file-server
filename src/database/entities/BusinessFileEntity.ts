@@ -3,6 +3,8 @@ import { DBTable } from "../../constants/DBTable";
 import { Download } from "./DownloadEntity";
 import { GeneralUtils } from "../../utils/generalUtils";
 import { Request} from "express";
+import { type } from "os";
+import { Email } from "./EmailEntity";
 
 
 @Entity(DBTable.BUSINESSFILES)
@@ -25,6 +27,9 @@ export class BusinessFile {
 
     @OneToMany((type) => Download, (download) => download.businessfile)
     downloads: Download[]
+
+    @OneToMany((type) => Email, (email) => email.businessfile)
+    emails: Email[]
 
     toPayload(req: Request): Partial<BusinessFile> {
         

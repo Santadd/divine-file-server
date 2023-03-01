@@ -2,5 +2,6 @@
 export enum DBTable {
     USERS ="users",
     BUSINESSFILES = "businessfiles",
-    DOWNLOADS = "downloads"
+    DOWNLOADS = "downloads",
+    EMAILS = "emails"
 }
