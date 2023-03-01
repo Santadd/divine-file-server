@@ -232,4 +232,29 @@ export class BusinessFilesController {
         
 
     }
+
+    // Get download details of a file
+    async downloadDetails(req: Request, res: Response, next: NextFunction) {
+
+        // get file id from the request
+        const {id} = req.params;
+        const businessFileRepo = appDataSource.getRepository(BusinessFile)
+        // Check if file exists
+        const businessFile = await businessFileRepo.findOneByOrFail({
+            id: id,
+        });
+
+        // Get the download repo and create a query builder
+        const queryBuilder = appDataSource
+          .getRepository(Download)
+          .createQueryBuilder("download")
+          .innerJoin("download.businessfile", "file")
+          .select(["download", "file"])
+          .where("download.businessfileId = :fileId", {fileId: businessFile.id})
+
+        const {records: fileDetails, paginationInfo} = await Paginator.paginate(queryBuilder, req)
+
+
+        return ResponseUtil.sendResponse(res, "Download data fetched successfully", fileDetails, paginationInfo)
+    }
 }

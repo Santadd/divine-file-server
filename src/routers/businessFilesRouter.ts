@@ -50,7 +50,8 @@ router.get(
 );
 // Get file URL
 router.get("/:documents/:id", ErrorHandler.catchErrors(filesController.getFileUrl));
-
+// Get download details
+router.get("/:id/download/details", ErrorHandler.catchErrors(filesController.downloadDetails))
 
 
 
