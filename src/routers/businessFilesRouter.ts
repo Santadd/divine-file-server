@@ -52,6 +52,9 @@ router.get(
 router.get("/:documents/:id", ErrorHandler.catchErrors(filesController.getFileUrl));
 // Get download details
 router.get("/:id/download/details", ErrorHandler.catchErrors(filesController.downloadDetails))
+// Get email details of a file
+router.get("/:id/email/details", ErrorHandler.catchErrors(filesController.emailDetails))
+
 
 
 

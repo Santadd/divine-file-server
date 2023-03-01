@@ -257,4 +257,29 @@ export class BusinessFilesController {
 
         return ResponseUtil.sendResponse(res, "Download data fetched successfully", fileDetails, paginationInfo)
     }
+
+    // Get email details of a file
+    async emailDetails(req: Request, res: Response, next: NextFunction) {
+
+        // get file id from the request
+        const {id} = req.params;
+        const businessFileRepo = appDataSource.getRepository(BusinessFile)
+        // Check if file exists
+        const businessFile = await businessFileRepo.findOneByOrFail({
+            id: id,
+        });
+
+        // Get the email repo and create a query builder
+        const queryBuilder = appDataSource
+          .getRepository(Email)
+          .createQueryBuilder("email")
+          .innerJoin("email.businessfile", "file")
+          .select(["email", "file"])
+          .where("email.businessfileId = :fileId", {fileId: businessFile.id})
+
+        const {records: fileDetails, paginationInfo} = await Paginator.paginate(queryBuilder, req)
+
+
+        return ResponseUtil.sendResponse(res, "Email data fetched successfully", fileDetails, paginationInfo)
+    }
 }
