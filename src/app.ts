@@ -1,11 +1,10 @@
-import express, {Express, NextFunction, Request, Response} from "express";
+import express, {Express, Request, Response} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import usersRouter from "./routers/usersRouter"
 import filesRouter from "./routers/businessFilesRouter";
 import authRouter from "./routers/authRouter";
-import { EntityNotFoundError } from "typeorm";
-import { ResponseUtil } from "./utils/Response";
+import utilsRouter from "./routers/utilsRouter"
 import { ErrorHandler } from "./middlewares/ErrorHandler";
 
 const app: Express = express();
@@ -22,6 +21,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use("/api/users", usersRouter);
 app.use("/api/files", filesRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/search", utilsRouter);
 
 // end region routes
 
