@@ -11,6 +11,7 @@ import { downloadFileTemplate } from "../templates/downloadFileTemplate";
 import { MailService } from "../services/mailService";
 import path from "path";
 import fs from "fs";
+import { Email } from "../database/entities/EmailEntity";
 
 export class BusinessFilesController {
     // Get business files function
@@ -138,11 +139,24 @@ export class BusinessFilesController {
             id: id,
         });
         
-        // Save file to downloads
+        // Create download instance
         const downloadRepo = appDataSource.getRepository(Download);
         const download = downloadRepo.create({
             user: user,
             businessfile: businessFile
+        })
+
+        // Create Email Instance
+        const emailRepo = appDataSource.getRepository(Email);
+        const emailData = emailRepo.create({
+            recipientEmail: user.email,
+            businessfile: businessFile
+        })
+        
+        // Start a transaction
+        await appDataSource.transaction(async (transactionalEntityManager) => {
+            await transactionalEntityManager.save(download)
+            await transactionalEntityManager.save(emailData)
         })
 
         // Send File via email to user
@@ -157,8 +171,7 @@ export class BusinessFilesController {
                 {filename: `${businessFile.file}`, path: `./uploads/businessfiles/${businessFile.file}`}
             ]
         });
-
-        await downloadRepo.save(download);
+        
 
         return ResponseUtil.sendResponse(res, "File has been sent successfully via email", null);
     }

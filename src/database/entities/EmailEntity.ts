@@ -24,6 +24,6 @@ export class Email {
     businessfile: BusinessFile
 
     @CreateDateColumn()
-    SendDate: Date
+    sendDate: Date
 
 }
