@@ -139,30 +139,17 @@ export class BusinessFilesController {
             id: id,
         });
         
-        // // Create download instance
-        // const downloadRepo = appDataSource.getRepository(Download);
-        // const download = downloadRepo.create({
-        //     user: user,
-        //     businessfile: businessFile,
-        // })
-
-        // // Create Email Instance
-        // const emailRepo = appDataSource.getRepository(Email);
-        // const emailData = emailRepo.create({
-        //     recipientEmail: user.email,
-        //     businessfile: businessFile,
-        //     download: download
-        // });
-        
         
         // Start a transaction
         await appDataSource.transaction(async (transactionalEntityManager) => {
+
             // Create download instance
             const downloadRepo = appDataSource.getRepository(Download);
             const download = downloadRepo.create({
                 user: user,
                 businessfile: businessFile,
             })
+
             await transactionalEntityManager.save(download)
             // Create Email Instance
             const emailRepo = appDataSource.getRepository(Email);
@@ -171,6 +158,7 @@ export class BusinessFilesController {
                 businessfile: businessFile,
                 download: download
             });
+
             await transactionalEntityManager.save(emailData)
         })
 
@@ -303,14 +291,31 @@ export class BusinessFilesController {
 
         // get file id from the request
         const {id} = req.params;
-        const businessFileRepo = appDataSource.getRepository(BusinessFile)
+        const queryBuilder = appDataSource.getRepository(BusinessFile).createQueryBuilder("businessfile")
+        
         // Check if file exists
-        const businessFile = await businessFileRepo.findOneByOrFail({
-            id: id,
-        });
+        await queryBuilder.where("businessfile.id = :bfileId", {bfileId: id}).getOneOrFail()
 
+        // If file exists
+        // inner join on downloads and inner join on emails
+        queryBuilder
+          .innerJoin("businessfile.downloads", "download")
+          .innerJoin("download.email", "email")
+          .select(
+            [
+                "businessfile",
+                "download",
+                "email"
+            ]
+          );
 
+        const {records: fileDetails, paginationInfo} = await Paginator.paginate(queryBuilder, req)
 
-        return ResponseUtil.sendResponse(res, "Email data fetched successfully", null)
+        return ResponseUtil.sendResponse(
+          res,
+          "Details data fetched successfully",
+          fileDetails,
+          paginationInfo
+        );
     }
 }
