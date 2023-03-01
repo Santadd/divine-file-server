@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { DBTable } from "../../constants/DBTable";
 import { User } from "./UserEntity";
 import { BusinessFile } from "./BusinessFileEntity";
+import { Download } from "./DownloadEntity";
 
 
 // Junction Table (association Entity)
@@ -22,6 +23,10 @@ export class Email {
 
     @ManyToOne((type) => BusinessFile, (businessfile) => businessfile.emails)
     businessfile: BusinessFile
+
+    @OneToOne((type) => Download, (download) => download.email)
+    @JoinColumn()
+    download: Download
 
     @CreateDateColumn()
     sendDate: Date

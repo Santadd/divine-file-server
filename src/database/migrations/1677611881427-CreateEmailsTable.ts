@@ -27,6 +27,11 @@ export class CreateEmailsTable1677611881427 implements MigrationInterface {
                         isNullable: false
                     },
                     {
+                        name: "downloadId", 
+                        type: "int",
+                        isNullable: false
+                    },
+                    {
                         name: "sendDate",
                         type: "timestamp",
                         default: "now()",
@@ -37,13 +42,22 @@ export class CreateEmailsTable1677611881427 implements MigrationInterface {
             true
         );
 
-        await queryRunner.createForeignKey(
+        await queryRunner.createForeignKeys(
             DBTable.EMAILS,
-            new TableForeignKey({
-                columnNames: ["businessfileId"],
-                referencedColumnNames: ["id"],
-                referencedTableName: DBTable.BUSINESSFILES
-            }),
+            [
+                new TableForeignKey({
+                    columnNames: ["businessfileId"],
+                    referencedColumnNames: ["id"],
+                    referencedTableName: DBTable.BUSINESSFILES
+                }),
+
+                new TableForeignKey({
+                    columnNames: ["downloadId"],
+                    referencedColumnNames: ["id"],
+                    referencedTableName: DBTable.DOWNLOADS,
+                    onDelete: "CASCADE"
+                })
+            ]
         )
 
     }

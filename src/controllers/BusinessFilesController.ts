@@ -139,23 +139,38 @@ export class BusinessFilesController {
             id: id,
         });
         
-        // Create download instance
-        const downloadRepo = appDataSource.getRepository(Download);
-        const download = downloadRepo.create({
-            user: user,
-            businessfile: businessFile
-        })
+        // // Create download instance
+        // const downloadRepo = appDataSource.getRepository(Download);
+        // const download = downloadRepo.create({
+        //     user: user,
+        //     businessfile: businessFile,
+        // })
 
-        // Create Email Instance
-        const emailRepo = appDataSource.getRepository(Email);
-        const emailData = emailRepo.create({
-            recipientEmail: user.email,
-            businessfile: businessFile
-        })
+        // // Create Email Instance
+        // const emailRepo = appDataSource.getRepository(Email);
+        // const emailData = emailRepo.create({
+        //     recipientEmail: user.email,
+        //     businessfile: businessFile,
+        //     download: download
+        // });
+        
         
         // Start a transaction
         await appDataSource.transaction(async (transactionalEntityManager) => {
+            // Create download instance
+            const downloadRepo = appDataSource.getRepository(Download);
+            const download = downloadRepo.create({
+                user: user,
+                businessfile: businessFile,
+            })
             await transactionalEntityManager.save(download)
+            // Create Email Instance
+            const emailRepo = appDataSource.getRepository(Email);
+            const emailData = emailRepo.create({
+                recipientEmail: user.email,
+                businessfile: businessFile,
+                download: download
+            });
             await transactionalEntityManager.save(emailData)
         })
 
@@ -281,5 +296,21 @@ export class BusinessFilesController {
 
 
         return ResponseUtil.sendResponse(res, "Email data fetched successfully", fileDetails, paginationInfo)
+    }
+
+    // all download and email details of a file
+    async allDetails(req: Request, res: Response, next: NextFunction) {
+
+        // get file id from the request
+        const {id} = req.params;
+        const businessFileRepo = appDataSource.getRepository(BusinessFile)
+        // Check if file exists
+        const businessFile = await businessFileRepo.findOneByOrFail({
+            id: id,
+        });
+
+
+
+        return ResponseUtil.sendResponse(res, "Email data fetched successfully", null)
     }
 }
