@@ -1,16 +1,22 @@
 import { Container } from "react-bootstrap";
-import Header from "./components/Header";
-import Body from "./components/Body";
-import BusFiles from "./components/BusFiles";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import BusFilesPage from "./pages/BusFilesPage";
+import LoginPage from "./pages/LoginPage";
+import FilePage from "./pages/FilePage";
 
 export default function App() {
   
   return (
     <Container fluid className="App">
-      <Header />
-      <Body>
-        <BusFiles />
-      </Body>
+      <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<BusFilesPage />}/>
+        <Route path="/files" element={<BusFilesPage />}/>
+        <Route path="/files/:id" element={<FilePage />}/>
+        <Route path="/login" element={<LoginPage />}/>
+        <Route path="*" element={<Navigate to="/" />}/>
+      </Routes>
+      </BrowserRouter>
     </Container>
   );
 }
