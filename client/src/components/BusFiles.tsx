@@ -3,6 +3,7 @@ import FileCard from "./FileCard";
 import React from "react";
 import { BusinessFile } from "../interfaces/businessFileInterface";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
+import { useApi } from "../contexts/ApiProvider";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
@@ -10,6 +11,8 @@ export default function BusFiles() {
   const [businessfiles, setBusinessFiles] = React.useState<
     BusinessFile[] | undefined | null
   >();
+
+  const api = useApi()
 
   React.useEffect(() => {
     (async () => {
@@ -22,7 +25,7 @@ export default function BusFiles() {
         setBusinessFiles(null)
       }
     })();
-  }, [])
+  }, [api])
 
   let contents;
   if (businessfiles === undefined) {

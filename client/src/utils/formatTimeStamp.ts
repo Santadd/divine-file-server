@@ -7,8 +7,6 @@ export function formatTimeStamp(dateString: string): string {
       year: "numeric",
     }).format(timestamp);
   
-    console.log(timestamp, "This is timestamp after format");
-  
     return formattedTimeStamp;
   }
   
