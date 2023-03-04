@@ -6,8 +6,7 @@ export default function FilePage() {
 
     return (
         <Main header>
-            <p>This is a file Page</p>
-            <p>File number is {id}</p>
+            <p>This is its id {id}</p>
         </Main>
     )
 }

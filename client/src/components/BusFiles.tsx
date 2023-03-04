@@ -1,3 +1,6 @@
+import { Container, Row } from "react-bootstrap";
+import FileCard from "./FileCard";
+
 export default function BusFiles() {
   const businessfiles = [
     {
@@ -44,22 +47,23 @@ export default function BusFiles() {
     },
   ];
 
+  const fileCards = businessfiles.map((item) => {
+    return (
+      <FileCard
+        key={item.id}
+        title={item.title}
+        description={item.description}
+        dateAdded={item.dateAdded}
+        file={item.file}
+      />
+    );
+  });
+
   return (
-    <div>
-      {businessfiles.length === 0 ? (
-        <p>No files here</p>
-      ) : (
-        businessfiles.map((file) => {
-          return (
-            <div key={file.id}>
-              <h2>{file.title}</h2>
-              <p>{file.description}</p>
-              <p>{file.file}</p>
-              <p>{file.dateAdded}</p>
-            </div>
-          );
-        })
-      )}
-    </div>
+    <Container>
+      <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+        {fileCards}
+      </Row>
+    </Container>
   );
 }
