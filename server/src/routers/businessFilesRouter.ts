@@ -15,7 +15,7 @@ const filesController = new BusinessFilesController();
 // Get files router
 router.get(
   "/",
-  ErrorHandler.catchErrors(AuthMiddleware.authenticate),
+  // ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(filesController.getFiles)
 );
 // get a file
