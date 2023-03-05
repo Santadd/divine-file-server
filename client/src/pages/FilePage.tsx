@@ -8,7 +8,7 @@ import { AllDetailsInterface } from "../interfaces/allDetailsInterface";
 
 export default function FilePage() {
     const {id} =  useParams();
-    const [busFile, setBusFile] = React.useState<AllDetailsInterface | undefined | null>(undefined);
+    const [busFile, setBusFile] = React.useState<AllDetailsInterface | undefined | null>();
 
     const api = useApi()
 
