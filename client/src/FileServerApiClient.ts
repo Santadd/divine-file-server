@@ -45,7 +45,7 @@ export default class FileServerApiClient{
     }
 
     // Get method
-    async get(url: any, query: any, options: any) {
+    async get(url: any, query?: any, options?: any) {
         return this.request({
             method: 'GET',
             url,

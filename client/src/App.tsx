@@ -14,7 +14,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<BusFilesPage />}/>
         <Route path="/files" element={<BusFilesPage />}/>
-        <Route path="/files/:id" element={<FilePage />}/>
+        <Route path="/files/:id/all/details" element={<FilePage />}/>
         <Route path="/login" element={<LoginPage />}/>
         <Route path="*" element={<Navigate to="/" />}/>
       </Routes>
