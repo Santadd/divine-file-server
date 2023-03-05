@@ -21,7 +21,7 @@ router.get(
 // get a file
 router.get(
   "/:id",
-  ErrorHandler.catchErrors(AuthMiddleware.authenticate),
+  // ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(filesController.getFile)
 );
 // upload file (post a file)
@@ -73,8 +73,8 @@ router.get(
 // Get all details of a file (download and email details)
 router.get(
   "/:id/all/details",
-  ErrorHandler.catchErrors(AuthMiddleware.authenticate), 
-  ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
+  // ErrorHandler.catchErrors(AuthMiddleware.authenticate), 
+  // ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
   ErrorHandler.catchErrors(filesController.allDetails)
 );
 
