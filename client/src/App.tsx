@@ -4,6 +4,7 @@ import BusFilesPage from "./pages/BusFilesPage";
 import LoginPage from "./pages/LoginPage";
 import FilePage from "./pages/FilePage";
 import ApiProvider from "./contexts/ApiProvider";
+import RegistrationPage from "./pages/RegistrationPage";
 
 export default function App() {
   
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/files" element={<BusFilesPage />}/>
         <Route path="/files/:id/all/details" element={<FilePage />}/>
         <Route path="/login" element={<LoginPage />}/>
+        <Route path="/register" element={<RegistrationPage />}/>
         <Route path="*" element={<Navigate to="/" />}/>
       </Routes>
       </ApiProvider>
