@@ -4,6 +4,7 @@ import InputField from "../components/InputField";
 import Main from "../components/Main";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
+import { toast } from 'react-toastify';
 
 interface FormErrors {
   email?: string;
@@ -41,6 +42,10 @@ export default function RegistrationPage() {
           setFormErrors(data.body.error);
         } else {
           setFormErrors({});
+          toast.success("Registration successful!", {
+            position: toast.POSITION.TOP_CENTER,
+            theme: "colored"
+          });
           navigate("/login");
         }
       }
