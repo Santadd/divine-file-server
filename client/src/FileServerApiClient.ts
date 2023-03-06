@@ -25,10 +25,15 @@ export default class FileServerApiClient {
         method: options.method,
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('_auth')}`,
           ...options.headers,
         },
         body: options.body ? JSON.stringify(options.body) : null,
       });
+      // Handle invalid token/expired token
+      if (response.status === 401) {
+        console.log("Unauthorized")
+      }
     } catch (error: any) {
       response = {
         ok: false,

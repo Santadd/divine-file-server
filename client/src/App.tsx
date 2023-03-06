@@ -12,7 +12,7 @@ import { AuthProvider, RequireAuth } from "react-auth-kit";
 export default function App() {
   return (
     <Container fluid className="App">
-      <AuthProvider authType={"cookie"} authName={"_auth"}>
+      <AuthProvider authType={"localstorage"} authName={"_auth"}>
         <BrowserRouter>
           <ToastContainer />
           <ApiProvider>

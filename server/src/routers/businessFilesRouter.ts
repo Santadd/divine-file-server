@@ -15,13 +15,13 @@ const filesController = new BusinessFilesController();
 // Get files router
 router.get(
   "/",
-  // ErrorHandler.catchErrors(AuthMiddleware.authenticate),
+  ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(filesController.getFiles)
 );
 // get a file
 router.get(
   "/:id",
-  // ErrorHandler.catchErrors(AuthMiddleware.authenticate),
+  ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(filesController.getFile)
 );
 // upload file (post a file)
