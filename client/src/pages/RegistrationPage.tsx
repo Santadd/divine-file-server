@@ -2,9 +2,12 @@ import React from "react";
 import { Button, Form } from "react-bootstrap";
 import InputField from "../components/InputField";
 import Main from "../components/Main";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
 import { toast } from 'react-toastify';
+
+
+import { useIsAuthenticated, useSignIn } from 'react-auth-kit'
 
 interface FormErrors {
   email?: string;
@@ -20,8 +23,17 @@ export default function RegistrationPage() {
 
   const navigate = useNavigate();
   const api = useApi();
+  const isAuthenticated = useIsAuthenticated()
+
 
   React.useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
+  React.useEffect(() => {
+
     if (emailField.current) {
       emailField.current.focus();
     }
@@ -80,6 +92,10 @@ export default function RegistrationPage() {
           Register
         </Button>
       </Form>
+      <hr />
+      <p>
+        Have an account? <Link to="/login">Login here</Link>!
+      </p>
     </Main>
   );
 }

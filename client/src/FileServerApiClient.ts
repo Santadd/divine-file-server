@@ -1,5 +1,6 @@
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
+
 export default class FileServerApiClient {
   base_url: string;
   constructor() {
@@ -86,5 +87,15 @@ export default class FileServerApiClient {
       url,
       ...options,
     });
+  }
+
+  // login method
+  async login(email: string, password: string) {
+    const response = await this.post("/auth/login", {email, password},);
+    if (!response.ok) {
+      return response.status === 401 ? 'fail' : 'error';
+    }
+    console.log(response, "I have a response")
+    return response;
   }
 }

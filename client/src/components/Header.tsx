@@ -5,9 +5,25 @@ import {
   Form,
   Button,
 } from "react-bootstrap";
-import {NavLink} from "react-router-dom"
+import {NavLink, useNavigate} from "react-router-dom"
+import {useAuthUser, useSignOut} from 'react-auth-kit'
 
 export default function Header() {
+
+  // Get the user
+  const auth = useAuthUser()
+  // signOut hook
+  const signOut = useSignOut()
+  const navigate = useNavigate()
+
+  console.log(auth() === null)
+
+  function handleClick() {
+    console.log("I was clicked")
+    signOut()
+    navigate("/login")
+  }
+
   return (
     <Navbar bg="light" expand="lg" sticky="top" className="Header">
       <Container fluid>
@@ -30,8 +46,9 @@ export default function Header() {
               className="me-2"
               aria-label="Search"
             />
-            <Button variant="outline-primary">Search</Button>
+            <Button variant="outline-primary me-3">Search</Button>
           </Form>
+          { auth() && <Button variant="outline-primary" onClick={handleClick}>Logout</Button>}
         </Navbar.Collapse>
       </Container>
     </Navbar>
