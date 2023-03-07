@@ -168,7 +168,7 @@ export class AuthController {
         )
         // Get password verificationUrl
         const reqOriginAddress = `${req.protocol}://${req.get('host')}`;
-        const passwordVerificationUrl = `${reqOriginAddress}/api/auth/reset_password_request/${token}`
+        const passwordVerificationUrl = `${process.env.PASSWORD_RESET_URL}/reset_password_request/${token}`
         // Create email template
         const htmlTemplate = resetPasswordTemplate(user.email, passwordVerificationUrl);
         
@@ -208,8 +208,22 @@ export class AuthController {
 
     // reset password
     async resetPassword(req: Request, res: Response, next: NextFunction) {
+        
         // Get the email and password from the form
-        const {email, password} = req.body
+        const {email, password, token} = req.body
+
+        // Verify the token
+        const payload = GeneralUtils.validateVerificationToken(token)
+
+        // false token
+        if (!payload) {
+            return ResponseUtil.sendError(res, "Invalid or expired token", 401, null);
+        }
+
+        // Check for token Type
+        if (payload["tokenType"] !== "forgot_password" || !payload["userId"]) {
+            return ResponseUtil.sendError(res, "Invalid Request", 403, null)
+        }
 
         const dto = new ResetPasswordDTO();
         dto.email = email
@@ -230,8 +244,10 @@ export class AuthController {
         if (!user.isVerified) {
             return ResponseUtil.sendError(res, "Please confirm your account", 401, null)
         }
+        if (user.id !== payload["userId"]) {
+            return ResponseUtil.sendError(res, "Unauthorized Request", 403, null)
+        }
 
-        console.log(password, email, "I have them here");
         
         // Hash the new password
         const hashedPassword = await hash(password, 12);

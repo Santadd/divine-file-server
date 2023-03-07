@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider, RequireAuth } from "react-auth-kit";
 import UploadFilePage from "./pages/UploadFilePage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 export default function App() {
   return (
@@ -31,6 +33,8 @@ export default function App() {
               <Route path="/files/:id/all/details" element={<FilePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
+              <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+              <Route path="/reset_password_request/:token" element={<ResetPasswordPage />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </ApiProvider>

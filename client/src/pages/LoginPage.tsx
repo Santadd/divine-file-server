@@ -105,6 +105,7 @@ export default function LoginPage() {
         </Button>
       </Form>
       <hr />
+      <p>Forgot your password? You can <Link to="/forgotpassword">reset it</Link>.</p>
       <p>
         Don't have an account? <Link to="/register">Register here</Link>!
       </p>

@@ -2,10 +2,10 @@ import React from "react";
 import { Button, Form } from "react-bootstrap";
 import InputField from "../components/InputField";
 import Main from "../components/Main";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
-import { toast } from 'react-toastify';
-import { useIsAuthenticated, useSignIn } from 'react-auth-kit'
+import { toast } from "react-toastify";
+import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 
 interface FormErrors {
   email?: string;
@@ -13,7 +13,7 @@ interface FormErrors {
   password2?: string;
 }
 
-export default function RegistrationPage() {
+export default function ResetPasswordPage() {
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const emailField = React.useRef<HTMLInputElement>(null);
   const passwordField = React.useRef<HTMLInputElement>(null);
@@ -21,21 +21,20 @@ export default function RegistrationPage() {
 
   const navigate = useNavigate();
   const api = useApi();
-  const isAuthenticated = useIsAuthenticated()
+  const isAuthenticated = useIsAuthenticated();
+  const token = useParams();
 
+  console.log(typeof token, "This is the token");
 
   React.useEffect(() => {
     if (isAuthenticated()) {
       navigate("/");
+    } else if (!token) {
+      navigate("/");
+    } else {
+      emailField.current?.focus();
     }
-  }, [isAuthenticated, navigate]);
-
-  React.useEffect(() => {
-
-    if (emailField.current) {
-      emailField.current.focus();
-    }
-  }, []);
+  }, [isAuthenticated, navigate, token]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,18 +42,26 @@ export default function RegistrationPage() {
       setFormErrors({ password2: "Passwords don't match" });
     } else {
       if (emailField.current && passwordField.current) {
-        const data = await api.post("/auth/register", {
+        const response = await api.post("/auth/reset_password", {
+          token: token?.token,
           email: emailField.current.value,
           password: passwordField.current.value,
         });
 
-        if (!data.ok) {
-          setFormErrors(data.body.error);
+        if (!response.ok) {
+          if (response.body.error) {
+            setFormErrors(response.body.error);
+          } else {
+            toast.error(response.body.message, {
+              position: toast.POSITION.TOP_CENTER,
+              theme: "colored",
+            });
+          }
         } else {
           setFormErrors({});
-          toast.success("Registration successful! Please check your email to confirm your account", {
+          toast.success("Password Reset successful!", {
             position: toast.POSITION.TOP_CENTER,
-            theme: "colored"
+            theme: "colored",
           });
           navigate("/login");
         }
@@ -64,7 +71,7 @@ export default function RegistrationPage() {
 
   return (
     <Main>
-      <h1>Register</h1>
+      <h1>Reset Password</h1>
       <Form onSubmit={onSubmit}>
         <InputField
           name="email"
@@ -87,7 +94,7 @@ export default function RegistrationPage() {
           fieldRef={password2Field}
         />
         <Button variant="primary" type="submit">
-          Register
+          Reset Password
         </Button>
       </Form>
       <hr />
