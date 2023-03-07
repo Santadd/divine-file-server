@@ -103,4 +103,36 @@ export default class FileServerApiClient {
     console.log(response, "I have a response")
     return response;
   }
+
+  async postFormData(url: string, formData: FormData) {
+    const headers = {
+      "Authorization": `Bearer ${localStorage.getItem('_auth')}`,
+    }
+    let response;
+    try {
+        response = await fetch(this.base_url + url, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+    } catch (error: any) { 
+      response = {
+        ok: false,
+        status: 500,
+        json: async () => {
+          return {
+            code: 500,
+            message: "The server is unresponsive",
+            description: error.toString(),
+          };
+        },
+      };
+    }
+    return {
+      ok: response.ok,
+      status: response.status,
+      body: response.status !== 204 ? await response.json() : null,
+    };
+    
+  }
 }

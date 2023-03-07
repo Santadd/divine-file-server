@@ -1,3 +1,4 @@
+import { ElementType } from "react";
 import Form from "react-bootstrap/Form";
 
 interface InputFieldProps {
@@ -6,6 +7,7 @@ interface InputFieldProps {
   type?: string;
   placeholder?: string;
   error?: string;
+  asvalue?: ElementType<any>;
   fieldRef?: React.RefObject<HTMLInputElement>;
 }
 
@@ -16,6 +18,7 @@ export default function InputField({
   placeholder,
   error,
   fieldRef,
+  asvalue,
 }: InputFieldProps) {
   return (
     <Form.Group controlId={name} className="InputField">
@@ -24,6 +27,7 @@ export default function InputField({
         type={type || "text"}
         placeholder={placeholder}
         ref={fieldRef}
+        as={asvalue}
       />
       <Form.Text className="text-danger">{error}</Form.Text>
     </Form.Group>

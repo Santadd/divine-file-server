@@ -8,6 +8,7 @@ import RegistrationPage from "./pages/RegistrationPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider, RequireAuth } from "react-auth-kit";
+import UploadFilePage from "./pages/UploadFilePage";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
                 }
               />
               <Route path="/files" element={<BusFilesPage />} />
+              <Route path="/upload" element={<UploadFilePage />} />
               <Route path="/files/:id/all/details" element={<FilePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />

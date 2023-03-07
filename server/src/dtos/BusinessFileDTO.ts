@@ -10,7 +10,7 @@ export class UploadFileDTO {
     @IsNotEmpty()
     @IsString()
     @MinLength(3)
-    @MaxLength(25)
+    @MaxLength(80)
     @IsUnique(BusinessFile, "title")
     title: string
 
@@ -27,7 +27,7 @@ export class UpdateFileDTO {
     @IsNotEmpty()
     @IsString()
     @MinLength(3)
-    @MaxLength(25)
+    @MaxLength(80)
     @IsUnique(BusinessFile, "title")
     title: string
 

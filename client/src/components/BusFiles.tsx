@@ -19,9 +19,9 @@ export default function BusFiles() {
   React.useEffect(() => {
     (async () => {
       const response = await api.get("/files");
-      console.log(response, "My response")
+      
       if (response.ok) {
-        console.log(response.body.paginationInfo, "All items")
+        
         setBusinessFiles(response.body.data)
         setPaginationInfo(response.body.paginationInfo)
       }

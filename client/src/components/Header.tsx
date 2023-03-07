@@ -7,6 +7,7 @@ import {
 } from "react-bootstrap";
 import {NavLink, useNavigate} from "react-router-dom"
 import {useAuthUser, useSignOut} from 'react-auth-kit'
+import { Roles } from "../utils/constants";
 
 export default function Header() {
 
@@ -16,10 +17,7 @@ export default function Header() {
   const signOut = useSignOut()
   const navigate = useNavigate()
 
-  console.log(auth() === null)
-
   function handleClick() {
-    console.log("I was clicked")
     signOut()
     navigate("/login")
   }
@@ -37,7 +35,8 @@ export default function Header() {
             navbarScroll
           >
             <Nav.Link as={NavLink} to="/" end>Home</Nav.Link>
-            <Nav.Link as={NavLink} to="/files">Files</Nav.Link>
+            <Nav.Link as={NavLink} to="/files" end>Files</Nav.Link>
+            {auth()?.role === Roles.ADMIN && <Nav.Link as={NavLink} to="/upload" end>Upload A File</Nav.Link>}
           </Nav>
           <Form className="d-flex">
             <Form.Control
