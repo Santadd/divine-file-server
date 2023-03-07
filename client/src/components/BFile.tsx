@@ -1,5 +1,5 @@
 import React from "react";
-import {Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { AllDetailsInterface } from "../interfaces/allDetailsInterface";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
@@ -17,7 +17,6 @@ interface DataRow {
 }
 
 export default function BFile(props: BusFileProps) {
-
   // custom styles
   const customStyles = {
     headRow: {
@@ -76,18 +75,19 @@ export default function BFile(props: BusFileProps) {
   ];
 
   const data = props.fileData["data"];
-
+  console.log(data, "I have");
   // Filter the data from the response
-  const filteredData = data[0].downloads.map((item, index) => {
-    let adjustedIndex = index + 1;
-    return {
-      id: adjustedIndex,
-      downloadDate: formatTimeStamp(item.downloadDate),
-      emailId: item.email.id,
-      recipientEmail: item.email.recipientEmail,
-      sendDate: formatTimeStamp(item.email.sendDate),
-    };
-  });
+  const filteredData =
+    data[0]?.downloads?.map((item, index) => {
+      let adjustedIndex = index + 1;
+      return {
+        id: adjustedIndex,
+        downloadDate: formatTimeStamp(item.downloadDate),
+        emailId: item.email.id,
+        recipientEmail: item.email.recipientEmail,
+        sendDate: formatTimeStamp(item.email.sendDate),
+      };
+    }) || [];
 
   const [records, setRecords] = React.useState(filteredData);
 
@@ -110,13 +110,15 @@ export default function BFile(props: BusFileProps) {
 
   return (
     <Container>
-      <div className="text-end">
-        <input
-          type="text"
-          placeholder="Search for Item"
-          onChange={handleFilter}
-        />
-      </div>
+      {filteredData.length > 0 && (
+        <div className="text-end">
+          <input
+            type="text"
+            placeholder="Search for Item"
+            onChange={handleFilter}
+          />
+        </div>
+      )}
       <DataTable
         // title="Download Details"
         columns={columns}
