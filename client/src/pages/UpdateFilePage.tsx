@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Main from "../components/Main";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
@@ -31,7 +31,6 @@ export default function UpdateFilePage() {
         const response = await api.get(`/files/${id}`)
         // if file was found
         if (response.ok) {
-          console.log(response.body.data)
           setFileData(response.body.data) 
         }
         else {

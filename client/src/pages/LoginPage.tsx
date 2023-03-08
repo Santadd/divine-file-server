@@ -43,27 +43,32 @@ export default function LoginPage() {
     const result = await api.login(email, password)
     
     // Check for response type if it is successful
-    if (typeof result === "object" && result.body!== null ) {
-
-      if (signIn({
-        token: result.body.data.accessToken,
-        expiresIn: 3600,
-        tokenType: "Bearer",
-        authState: result.body.data.user
-      })) {
-        // Log user in
-        navigate("/")
+    if (typeof result === "object" ) {
+      console.log(result) 
+      if (result.ok) {
+        console.log("This was okay")
+        if (signIn({
+          token: result.body.data.accessToken,
+          expiresIn: 3600,
+          tokenType: "Bearer",
+          authState: result.body.data.user
+        })) {
+          // Log user in
+          localStorage.setItem("_auth", result.body.data.accessToken)
+          navigate("/")
+        }
+        else {
+          console.log("something happened")
+        }
       }
+      // Login fails
       else {
-        console.log("something happened")
-      }
-    }
-    // If login fails
-    else if (result === "fail") {
-      toast.error("Invalid credentials. Try again", {
+          toast.error(result.body.message, {
         position: toast.POSITION.TOP_CENTER,
         theme: "colored"
       });
+      }
+      
     }
     else {
       console.log("Something went wrong")

@@ -93,7 +93,7 @@ export default class FileServerApiClient {
   async login(email: string, password: string) {
     const response = await this.post("/auth/login", { email, password });
     if (!response.ok) {
-      return response.status === 401 ? "fail" : "error";
+      return response.status === 401 ? response : "error";
     }
     console.log(response, "I have a response");
     return response;
