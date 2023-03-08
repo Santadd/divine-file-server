@@ -99,6 +99,7 @@ export default class FileServerApiClient {
     return response;
   }
 
+  // post form data
   async postFormData(url: string, formData: FormData) {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("_auth")}`,
@@ -107,6 +108,38 @@ export default class FileServerApiClient {
     try {
       response = await fetch(this.base_url + url, {
         method: "POST",
+        headers,
+        body: formData,
+      });
+    } catch (error: any) {
+      response = {
+        ok: false,
+        status: 500,
+        json: async () => {
+          return {
+            code: 500,
+            message: "The server is unresponsive",
+            description: error.toString(),
+          };
+        },
+      };
+    }
+    return {
+      ok: response.ok,
+      status: response.status,
+      body: response.status !== 204 ? await response.json() : null,
+    };
+  }
+
+  // post form data
+  async putFormData(url: string, formData: FormData) {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("_auth")}`,
+    };
+    let response;
+    try {
+      response = await fetch(this.base_url + url, {
+        method: "PUT",
         headers,
         body: formData,
       });

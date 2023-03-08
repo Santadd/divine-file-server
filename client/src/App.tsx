@@ -13,6 +13,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ConfirmAccountPage from "./pages/ConfirmAccountPage";
 import SearchPage from "./pages/SearchPage";
+import UpdateFilePage from "./pages/UpdateFilePage";
 
 export default function App() {
   return (
@@ -43,6 +44,14 @@ export default function App() {
                 element={
                   <RequireAuth loginPath="/login">
                     <UploadFilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/edit/:id"
+                element={
+                  <RequireAuth loginPath="/login">
+                    <UpdateFilePage />
                   </RequireAuth>
                 }
               />

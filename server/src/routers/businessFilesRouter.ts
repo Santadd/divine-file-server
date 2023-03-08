@@ -37,6 +37,7 @@ router.put(
   "/:id",
   ErrorHandler.catchErrors(AuthMiddleware.authenticate),
   ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
+  FileUploader.upload("file", "businessfiles", 2 * 1024 * 1024),
   ErrorHandler.catchErrors(filesController.updateFile)
 );
 // Delete a file

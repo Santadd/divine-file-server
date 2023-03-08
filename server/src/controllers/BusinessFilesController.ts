@@ -108,6 +108,8 @@ export class BusinessFilesController {
 
     // Get the data
     const fileData = req.body;
+    // Get the file
+    fileData.file = req.file?.filename;
 
     // Create a dto
     const dto = new UpdateFileDTO();

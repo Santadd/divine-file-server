@@ -9,6 +9,7 @@ interface InputFieldProps {
   error?: string;
   asvalue?: ElementType<any>;
   fieldRef?: React.RefObject<HTMLInputElement>;
+  defaultValue?: string
 }
 
 export default function InputField({
@@ -19,6 +20,7 @@ export default function InputField({
   error,
   fieldRef,
   asvalue,
+  defaultValue
 }: InputFieldProps) {
   return (
     <Form.Group controlId={name} className="InputField">
@@ -28,6 +30,7 @@ export default function InputField({
         placeholder={placeholder}
         ref={fieldRef}
         as={asvalue}
+        defaultValue={defaultValue}
       />
       <Form.Text className="text-danger">{error}</Form.Text>
     </Form.Group>

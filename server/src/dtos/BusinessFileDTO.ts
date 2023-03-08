@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator"
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
 import { BusinessFile } from "../database/entities/BusinessFileEntity"
 import { IsUnique } from "../validators/isUniqueValidator"
 
@@ -24,14 +24,14 @@ export class UpdateFileDTO {
 
     id?: number
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     @MinLength(3)
     @MaxLength(80)
     @IsUnique(BusinessFile, "title")
     title: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     description: string
 }

@@ -95,7 +95,7 @@ export default function FileCard(props: FileCardProps) {
                 >
                   View Details
                 </Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Edit</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to={`/edit/${props.id}`} >Edit</Dropdown.Item>
                 <Dropdown.Item onClick={handleShow}>Delete</Dropdown.Item>
               </DropdownButton>
               <Modal show={show} onHide={handleClose}>
