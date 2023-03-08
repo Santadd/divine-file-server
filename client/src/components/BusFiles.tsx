@@ -50,6 +50,13 @@ export default function BusFiles() {
     }
   }
 
+  // Handle delete file
+  function handleDeleteFile(id: number) {
+    setBusinessFiles((prevFiles) => {
+      return prevFiles?.filter((file) => file.id !== id)
+    })
+  }
+
   let contents;
   if (businessfiles === undefined) {
     contents = (
@@ -71,6 +78,7 @@ export default function BusFiles() {
           dateAdded={item.dateAdded ? formatTimeStamp(item.dateAdded) : ""}
           file={item.file}
           id={item.id}
+          onDeleteFile={handleDeleteFile}
         />
       );
     });

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { BusinessFile } from "../interfaces/businessFileInterface";
 import { Container, Row, Spinner } from "react-bootstrap";
 import FileCard from "../components/FileCard";
@@ -19,9 +19,7 @@ export default function SearchPage() {
 
   const api = useApi();
   const { search } = useLocation();
-
   const searchItem = new URLSearchParams(search);
-
   const searchQuery = searchItem.get("query");
 
   React.useEffect(() => {
@@ -35,14 +33,15 @@ export default function SearchPage() {
         setBusinessFiles(null);
       }
     })();
-  }, [api,businessfiles, searchQuery]);
+  }, [api, searchQuery]);
 
   // load next page function
   const loadNextPage = async () => {
     // If there is pagination and business files
     if (paginationInfo && businessfiles && paginationInfo.currentPage) {
       // Fetch the next page
-      const response = await api.get(`/search/?query=${searchQuery}`, {
+      const response = await api.get(`/search`, {
+        query: searchQuery,
         page: paginationInfo.currentPage + 1,
       });
       // Update the page with the new data added

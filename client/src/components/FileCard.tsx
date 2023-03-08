@@ -1,13 +1,13 @@
 import React from "react";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Col, Card, Button, Spinner } from "react-bootstrap";
+import { Col, Card, Button, Spinner, Modal } from "react-bootstrap";
 import { useApi } from "../contexts/ApiProvider";
 import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
 import { Roles } from "../utils/constants";
 import { DropdownButton, Dropdown } from "react-bootstrap";
-import {NavLink, useNavigate} from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom";
 
 interface FileCardProps {
   title: string;
@@ -15,6 +15,7 @@ interface FileCardProps {
   dateAdded?: string;
   file?: string;
   id: number;
+  onDeleteFile?: any;
 }
 
 export default function FileCard(props: FileCardProps) {
@@ -23,6 +24,11 @@ export default function FileCard(props: FileCardProps) {
   const auth = useAuthUser();
   const [isDownloading, setIsDownloading] = React.useState(false);
 
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   // Handle download functionality
   async function handleClick() {
     setIsDownloading(true);
@@ -30,7 +36,6 @@ export default function FileCard(props: FileCardProps) {
     setIsDownloading(false);
     // If download is successful
     if (response.ok) {
-      console.log(response.body.message);
       toast.success(`${response.body.message}`, {
         theme: "colored",
       });
@@ -41,6 +46,25 @@ export default function FileCard(props: FileCardProps) {
     }
   }
 
+  // handle deletion of file
+  async function handleDelete() {
+    const response = await api.delete(`/files/${props.id}`);
+
+    if (!response.ok) {
+      setShow(false);
+      toast.error(`File could not be deleted. Please try again`, {
+        theme: "colored",
+      });
+    } else {
+      // Call the onDelete prop function with the id of the deleted file
+      props.onDeleteFile(props.id);
+      // Hide the modal
+      setShow(false);
+      toast.success(`${response.body.message}`, {
+        theme: "colored",
+      });
+    }
+  }
   return (
     <Col>
       <Card className="text-center">
@@ -65,10 +89,32 @@ export default function FileCard(props: FileCardProps) {
                 drop="end"
                 variant="info"
               >
-                <Dropdown.Item as={NavLink} to={`/files/${props.id}/all/details`}>View Details</Dropdown.Item>
+                <Dropdown.Item
+                  as={NavLink}
+                  to={`/files/${props.id}/all/details`}
+                >
+                  View Details
+                </Dropdown.Item>
                 <Dropdown.Item href="#/action-2">Edit</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Delete</Dropdown.Item>
+                <Dropdown.Item onClick={handleShow}>Delete</Dropdown.Item>
               </DropdownButton>
+              <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Delete File</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Are you sure you want to delete the file{" "}
+                  <b>"{props.title}"</b>?
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                  <Button variant="danger" onClick={handleDelete}>
+                    Confirm
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </div>
           ) : (
             <div>
