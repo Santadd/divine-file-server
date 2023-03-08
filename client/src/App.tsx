@@ -12,6 +12,7 @@ import UploadFilePage from "./pages/UploadFilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ConfirmAccountPage from "./pages/ConfirmAccountPage";
+import SearchPage from "./pages/SearchPage";
 
 export default function App() {
   return (
@@ -29,14 +30,49 @@ export default function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="/files" element={<BusFilesPage />} />
-              <Route path="/upload" element={<UploadFilePage />} />
-              <Route path="/files/:id/all/details" element={<FilePage />} />
+              <Route
+                path="/files"
+                element={
+                  <RequireAuth loginPath="/login">
+                    <BusFilesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/upload"
+                element={
+                  <RequireAuth loginPath="/login">
+                    <UploadFilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/files/:id/all/details"
+                element={
+                  <RequireAuth loginPath="/login">
+                    <FilePage />
+                  </RequireAuth>
+                }
+              />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-              <Route path="/reset_password_request/:token" element={<ResetPasswordPage />} />
-              <Route path="/emailconfirmation/:token" element={<ConfirmAccountPage />} />
+              <Route
+                path="/reset_password_request/:token"
+                element={<ResetPasswordPage />}
+              />
+              <Route
+                path="/emailconfirmation/:token"
+                element={<ConfirmAccountPage />}
+              />
+              <Route
+                path="/search"
+                element={
+                  <RequireAuth loginPath="/login">
+                    <SearchPage />
+                  </RequireAuth>
+                }
+              />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </ApiProvider>
