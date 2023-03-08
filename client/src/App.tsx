@@ -11,6 +11,7 @@ import { AuthProvider, RequireAuth } from "react-auth-kit";
 import UploadFilePage from "./pages/UploadFilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ConfirmAccountPage from "./pages/ConfirmAccountPage";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
               <Route path="/reset_password_request/:token" element={<ResetPasswordPage />} />
+              <Route path="/emailconfirmation/:token" element={<ConfirmAccountPage />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </ApiProvider>

@@ -4,8 +4,8 @@ import InputField from "../components/InputField";
 import Main from "../components/Main";
 import { useNavigate, Link } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
-import { toast } from 'react-toastify';
-import { useIsAuthenticated, useSignIn } from 'react-auth-kit'
+import { toast } from "react-toastify";
+import { useIsAuthenticated } from "react-auth-kit";
 
 interface FormErrors {
   email?: string;
@@ -21,8 +21,7 @@ export default function RegistrationPage() {
 
   const navigate = useNavigate();
   const api = useApi();
-  const isAuthenticated = useIsAuthenticated()
-
+  const isAuthenticated = useIsAuthenticated();
 
   React.useEffect(() => {
     if (isAuthenticated()) {
@@ -31,7 +30,6 @@ export default function RegistrationPage() {
   }, [isAuthenticated, navigate]);
 
   React.useEffect(() => {
-
     if (emailField.current) {
       emailField.current.focus();
     }
@@ -52,10 +50,13 @@ export default function RegistrationPage() {
           setFormErrors(data.body.error);
         } else {
           setFormErrors({});
-          toast.success("Registration successful! Please check your email to confirm your account", {
-            position: toast.POSITION.TOP_CENTER,
-            theme: "colored"
-          });
+          toast.success(
+            "Registration successful! Please check your email to confirm your account",
+            {
+              position: toast.POSITION.TOP_CENTER,
+              theme: "colored",
+            }
+          );
           navigate("/login");
         }
       }

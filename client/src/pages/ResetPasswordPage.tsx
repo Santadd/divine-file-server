@@ -5,7 +5,7 @@ import Main from "../components/Main";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
 import { toast } from "react-toastify";
-import { useIsAuthenticated, useSignIn } from "react-auth-kit";
+import { useIsAuthenticated } from "react-auth-kit";
 
 interface FormErrors {
   email?: string;

@@ -30,10 +30,7 @@ export default class FileServerApiClient {
         },
         body: options.body ? JSON.stringify(options.body) : null,
       });
-      // Handle invalid token/expired token
-      if (response.status === 401) {
-        console.log("Unauthorized")
-      }
+      
     } catch (error: any) {
       response = {
         ok: false,

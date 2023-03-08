@@ -43,7 +43,7 @@ export class AuthController {
 
         // Get verificationUrl
         const reqOriginAddress = `${req.protocol}://${req.get('host')}`;
-        const verificationUrl = `${reqOriginAddress}/api/auth/emailconfirmation/${token}`
+        const verificationUrl = `${process.env.ACCOUNT_CONFIRMATION_URL}/emailconfirmation/${token}`
 
         // Create email template
         const htmlTemplate = verifyEmailTemplate(userEmail, verificationUrl);
