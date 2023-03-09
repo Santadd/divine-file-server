@@ -1,43 +1,38 @@
 import React from "react";
-import {
-  Navbar,
-  Container,
-  Nav,
-  Form,
-  Button,
-} from "react-bootstrap";
-import {NavLink, useNavigate} from "react-router-dom"
-import {useAuthUser, useSignOut} from 'react-auth-kit'
+import { Navbar, Container, Nav, Form, Button } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuthUser, useSignOut } from "react-auth-kit";
 import { Roles } from "../utils/constants";
 
 export default function Header() {
-
   const searchField = React.useRef<HTMLInputElement>(null);
 
   // Get the user
-  const auth = useAuthUser()
+  const auth = useAuthUser();
   // signOut hook
-  const signOut = useSignOut()
-  const navigate = useNavigate()
+  const signOut = useSignOut();
+  const navigate = useNavigate();
 
   function handleClick() {
-    signOut()
-    navigate("/login")
+    signOut();
+    navigate("/login");
   }
 
   // handle search
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const searchItem = searchField.current ? searchField.current.value : ""
-    console.log(searchItem)
+    const searchItem = searchField.current ? searchField.current.value : "";
+    console.log(searchItem);
     // Pass the search item as a query parameter to navigate
-    navigate(`/search/?query=${searchItem}`)
+    navigate(`/search/?query=${searchItem}`);
   }
 
   return (
     <Navbar bg="light" expand="lg" sticky="top" className="Header mb-5">
       <Container fluid>
-        <Navbar.Brand href="#"><b>Lizzy Tech Solutions</b></Navbar.Brand>
+        <Navbar.Brand href="#">
+          <b>Lizzy Tech Solutions</b>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -46,9 +41,17 @@ export default function Header() {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link as={NavLink} to="/" end>Home</Nav.Link>
-            <Nav.Link as={NavLink} to="/files" end>Files</Nav.Link>
-            {auth()?.role === Roles.ADMIN && <Nav.Link as={NavLink} to="/upload" end>Upload A File</Nav.Link>}
+            <Nav.Link as={NavLink} to="/" end>
+              Home
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/files" end>
+              Files
+            </Nav.Link>
+            {auth()?.role === Roles.ADMIN && (
+              <Nav.Link as={NavLink} to="/upload" end>
+                Upload A File
+              </Nav.Link>
+            )}
           </Nav>
           <Form className="d-flex" onSubmit={handleSearch}>
             <Form.Control
@@ -59,9 +62,23 @@ export default function Header() {
               ref={searchField}
               minLength={3}
             />
-            <Button variant="outline-primary me-3" type="submit">Search</Button>
+            <Button variant="outline-primary me-3" type="submit">
+              Search
+            </Button>
           </Form>
-          { auth() && <Button variant="outline-primary" onClick={handleClick}>Logout</Button>}
+          <Button
+            variant="outline-warning"
+            href={`${process.env.REACT_APP_BASE_API_URL}/api/docs`}
+            target="_blank"
+            className="me-2"
+          >
+            Visit the docs
+          </Button>
+          {auth() && (
+            <Button variant="outline-primary" onClick={handleClick}>
+              Logout
+            </Button>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

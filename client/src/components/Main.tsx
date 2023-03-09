@@ -1,4 +1,4 @@
-import { Container, Navbar, Stack } from "react-bootstrap";
+import { Container, Navbar, Stack, Button } from "react-bootstrap";
 import Header from "./Header";
 
 interface MainProps {
@@ -18,6 +18,14 @@ export default function Main(props: MainProps) {
             <Navbar.Brand href="#">
               <b>Lizzy Tech Solutions</b>
             </Navbar.Brand>
+            <Button
+              variant="outline-warning"
+              href={`${process.env.REACT_APP_BASE_API_URL}/api/docs`}
+              target="_blank"
+              className="me-2 text-end d-flex justify-content-end ms-auto"
+            >
+              Visit the docs
+            </Button>
           </Container>
         </Navbar>
       )}
