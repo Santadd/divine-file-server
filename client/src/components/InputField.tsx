@@ -10,6 +10,7 @@ interface InputFieldProps {
   asvalue?: ElementType<any>;
   fieldRef?: React.RefObject<HTMLInputElement>;
   defaultValue?: string
+  required?:boolean
 }
 
 export default function InputField({
@@ -20,10 +21,11 @@ export default function InputField({
   error,
   fieldRef,
   asvalue,
-  defaultValue
+  defaultValue,
+  required
 }: InputFieldProps) {
   return (
-    <Form.Group controlId={name} className="InputField">
+    <Form.Group controlId={name} className="InputField mt-3">
       {label && <Form.Label>{label}</Form.Label>}
       <Form.Control
         type={type || "text"}
@@ -31,6 +33,7 @@ export default function InputField({
         ref={fieldRef}
         as={asvalue}
         defaultValue={defaultValue}
+        required={required}
       />
       <Form.Text className="text-danger">{error}</Form.Text>
     </Form.Group>

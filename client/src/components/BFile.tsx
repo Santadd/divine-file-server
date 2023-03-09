@@ -111,11 +111,12 @@ export default function BFile(props: BusFileProps) {
   return (
     <Container>
       {filteredData.length > 0 && (
-        <div className="text-end">
+        <div className="d-flex justify-content-end ms-auto col-md-4 mb-5">
           <input
             type="text"
             placeholder="Search for Item"
             onChange={handleFilter}
+            className="form-control"
           />
         </div>
       )}

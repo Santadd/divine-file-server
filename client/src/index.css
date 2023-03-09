@@ -1,3 +1,4 @@
+
 .App {
   padding: 0;
 }
@@ -6,7 +7,7 @@
   border-bottom: 1px solid #eeecec6e;
 }
 
-.Body {
-  padding: 0;
-  margin: 15px;
+
+.Search--header {
+  color: rgb(38, 90, 167);
 }

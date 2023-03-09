@@ -11,7 +11,7 @@ interface PaginationInfo {
 export class Paginator {
     static async paginate(queryBuilder, req) {
         let page = Number(req.query.page) || 1;
-        let pageSize = Number(req.query.pageSize) || 10;
+        let pageSize = Number(req.query.pageSize) || 8;
         const offset = (page -1) * pageSize;
 
         // get the Items

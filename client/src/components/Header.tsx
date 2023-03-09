@@ -35,9 +35,9 @@ export default function Header() {
   }
 
   return (
-    <Navbar bg="light" expand="lg" sticky="top" className="Header">
+    <Navbar bg="light" expand="lg" sticky="top" className="Header mb-5">
       <Container fluid>
-        <Navbar.Brand href="#">Lizzy Tech Solutions</Navbar.Brand>
+        <Navbar.Brand href="#"><b>Lizzy Tech Solutions</b></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav

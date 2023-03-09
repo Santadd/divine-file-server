@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 import Main from "../components/Main";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
@@ -78,7 +78,8 @@ export default function UpdateFilePage() {
 
   return (
     <Main header>
-      <h1>Update file</h1>
+      <Container className="col-md-5 mx-auto mt-2">
+      <h3 className="mb-2">Update file</h3>
       <Form onSubmit={handleSubmit} ref={formRef}>
         <InputField
           name="title"
@@ -97,7 +98,7 @@ export default function UpdateFilePage() {
           error={formErrors.description && formErrors.description}
           defaultValue={fileData?.description ?? ""}
         />
-        <Form.Group controlId="file" className="mb-3">
+        <Form.Group controlId="file" className="mb-3 mt-3">
           <Form.Label>Choose New File</Form.Label>
           <Form.Control
             type="file"
@@ -113,6 +114,7 @@ export default function UpdateFilePage() {
           Update
         </Button>
       </Form>
+      </Container>
     </Main>
   );
 }

@@ -1,11 +1,11 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap";
 import InputField from "../components/InputField";
 import Main from "../components/Main";
 import { Link, useNavigate } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
 import { toast } from "react-toastify";
-import { useIsAuthenticated, useSignIn } from "react-auth-kit";
+import { useIsAuthenticated } from "react-auth-kit";
 
 interface FormErrors {
   email?: string;
@@ -67,22 +67,25 @@ export default function ForgotPasswordPage() {
 
   return (
     <Main>
-      <h1>Reset Password</h1>
-      <Form onSubmit={onSubmit} ref={formRef}>
-        <InputField
-          name="email"
-          label="Email address"
-          type="email"
-          error={formErrors.email}
-          fieldRef={emailField}
-        />
-        <Button variant="primary" type="submit">
-          Reset Password
-        </Button>
-      </Form>
-      <p>
-        You can <Link to="/login">Login here</Link>!
-      </p>
+      <Container className="col-md-5 mx-auto mt-5 Auth">
+        <h3>Reset Password Request</h3>
+        <Form onSubmit={onSubmit} ref={formRef}>
+          <InputField
+            name="email"
+            label="Email address"
+            type="email"
+            error={formErrors.email}
+            fieldRef={emailField}
+          />
+          <Button variant="primary" type="submit"  className="mt-3">
+            Send Reset Request
+          </Button>
+        </Form>
+        <hr />
+        <p>
+          You can <Link to="/login">Login here</Link>!
+        </p>
+      </Container>
     </Main>
   );
 }

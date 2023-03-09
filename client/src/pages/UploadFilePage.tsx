@@ -58,7 +58,8 @@ export default function UploadFilePage() {
 
   return (
     <Main header>
-      <h1>Upload A file</h1>
+      <Container className="col-md-5 mx-auto mt-2">
+      <h3 className="mb-2">Upload A file</h3>
       <Form onSubmit={handleSubmit} ref={formRef}>
         <InputField
           name="title"
@@ -75,7 +76,7 @@ export default function UploadFilePage() {
           fieldRef={descriptionField}
           error={formErrors.description && formErrors.description}
         />
-        <Form.Group controlId="file" className="mb-3">
+        <Form.Group controlId="file" className="mb-3 mt-3">
           <Form.Label>Upload File</Form.Label>
           <Form.Control
             type="file"
@@ -92,6 +93,7 @@ export default function UploadFilePage() {
           Upload
         </Button>
       </Form>
+      </Container>
     </Main>
   );
 }

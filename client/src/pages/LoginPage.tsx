@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap";
 import InputField from "../components/InputField";
 import Main from "../components/Main";
 import { Link, useNavigate} from "react-router-dom";
@@ -72,6 +72,10 @@ export default function LoginPage() {
     }
     else {
       console.log("Something went wrong")
+      toast.error("Invalid credentials", {
+        position: toast.POSITION.TOP_CENTER,
+        theme: "colored"
+      });
     }
 
     const errors: FormErrors = {};
@@ -89,7 +93,8 @@ export default function LoginPage() {
 
   return (
     <Main>
-      <h1>Login</h1>
+      <Container className="col-md-5 mx-auto mt-5 Auth">
+      <h3>Login</h3>
       <Form onSubmit={onSubmit}>
         <InputField
           name="email"
@@ -97,6 +102,7 @@ export default function LoginPage() {
           type="email"
           error={formErrors.email}
           fieldRef={emailField}
+          required
         />
         <InputField
           name="password"
@@ -104,8 +110,9 @@ export default function LoginPage() {
           type="password"
           error={formErrors.password}
           fieldRef={passwordField}
+          required
         />
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" className="mt-3">
           Login
         </Button>
       </Form>
@@ -114,6 +121,7 @@ export default function LoginPage() {
       <p>
         Don't have an account? <Link to="/register">Register here</Link>!
       </p>
+      </Container>
     </Main>
   );
 }
