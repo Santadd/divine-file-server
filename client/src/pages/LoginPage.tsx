@@ -37,16 +37,15 @@ export default function LoginPage() {
     event.preventDefault();
     const email = emailField.current ? emailField.current.value : "";
     const password = passwordField.current ? passwordField.current.value : "";
-    console.log("I will start from Here");
-    console.log(`You entered ${email}:${password}`);
+    
 
     const result = await api.login(email, password)
     
     // Check for response type if it is successful
     if (typeof result === "object" ) {
-      console.log(result) 
+      
       if (result.ok) {
-        console.log("This was okay")
+        
         if (signIn({
           token: result.body.data.accessToken,
           expiresIn: 3600,

@@ -11,7 +11,7 @@ export default function ConfirmAccountPage() {
     let isMounted = true;
     (async () => {
       const response = await api.get(`/auth/emailconfirmation/${token}`);
-      console.log(response);
+      
       if (isMounted && !response.ok) {
         toast.error(response.body.message, {
           position: toast.POSITION.TOP_CENTER,

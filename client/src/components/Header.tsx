@@ -22,7 +22,7 @@ export default function Header() {
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const searchItem = searchField.current ? searchField.current.value : "";
-    console.log(searchItem);
+    
     // Pass the search item as a query parameter to navigate
     navigate(`/search/?query=${searchItem}`);
   }

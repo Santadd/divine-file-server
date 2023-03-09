@@ -28,7 +28,7 @@ router.get(
 router.post(
   "/upload",
   ErrorHandler.catchErrors(AuthMiddleware.authenticate),
-  // ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
+  ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
   FileUploader.upload("file", "businessfiles", 2 * 1024 * 1024),
   ErrorHandler.catchErrors(filesController.uploadFile)
 );
@@ -74,8 +74,8 @@ router.get(
 // Get all details of a file (download and email details)
 router.get(
   "/:id/all/details",
-  // ErrorHandler.catchErrors(AuthMiddleware.authenticate), 
-  // ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
+  ErrorHandler.catchErrors(AuthMiddleware.authenticate), 
+  ErrorHandler.catchErrors(AdminMiddleware.checkAdminStatus),
   ErrorHandler.catchErrors(filesController.allDetails)
 );
 

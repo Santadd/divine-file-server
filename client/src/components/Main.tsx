@@ -7,7 +7,7 @@ interface MainProps {
 }
 
 export default function Main(props: MainProps) {
-  // console.log(props)
+  
   return (
     <Stack className="Main">
       {props.header ? (

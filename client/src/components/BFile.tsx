@@ -75,7 +75,7 @@ export default function BFile(props: BusFileProps) {
   ];
 
   const data = props.fileData["data"];
-  console.log(data, "I have");
+  
   // Filter the data from the response
   const filteredData =
     data[0]?.downloads?.map((item, index) => {

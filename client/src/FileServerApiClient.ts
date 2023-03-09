@@ -95,7 +95,7 @@ export default class FileServerApiClient {
     if (!response.ok) {
       return response.status === 401 ? response : "error";
     }
-    console.log(response, "I have a response");
+
     return response;
   }
 

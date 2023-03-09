@@ -16,7 +16,7 @@ export class ErrorHandler {
     res: Response,
     next: NextFunction
   ) {
-    console.log(err, "All errors");
+    
     // if entity is not found (resource is not found)
     if (err instanceof EntityNotFoundError) {
       return ResponseUtil.sendError(

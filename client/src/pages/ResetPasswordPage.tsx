@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
   const isAuthenticated = useIsAuthenticated();
   const token = useParams();
 
-  console.log(typeof token, "This is the token");
+  
 
   React.useEffect(() => {
     if (isAuthenticated()) {

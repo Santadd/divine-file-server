@@ -37,9 +37,9 @@ export default function ForgotPasswordPage() {
     });
 
     // Check for response type if it is successful
-    console.log(response, "This is the response I got");
+    
     if (!response.ok) {
-      console.log(response.body.message);
+      
       toast.error(response.body.message, {
         position: toast.POSITION.TOP_CENTER,
         theme: "colored",

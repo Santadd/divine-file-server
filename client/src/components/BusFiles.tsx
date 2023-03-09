@@ -33,19 +33,19 @@ export default function BusFiles() {
 
   // load next page function
   const loadNextPage = async () => {
-    console.log("I want to fetch more")
+    
     // If there is pagination and business files
     if ((paginationInfo && businessfiles) && paginationInfo.currentPage) {
       // Fetch the next page
       const response = await api.get("/files", {
         page: paginationInfo.currentPage + 1
       })
-      console.log(response.body.paginationInfo, "My paginationInfo")
+      
       // Update the page with the new data added
       if (response.ok) {
         setBusinessFiles([...businessfiles, ...response.body.data]);
         setPaginationInfo(response.body.paginationInfo)
-        console.log("Lets see the full details here")
+        
       }
     }
   }

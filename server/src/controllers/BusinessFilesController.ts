@@ -217,7 +217,7 @@ export class BusinessFilesController {
         await transactionalEntityManager.save(emailData);
       });
     } else {
-      console.log("Could not send mail");
+      
       return ResponseUtil.sendError(res, "Something went wrong", 500, null);
     }
 
