@@ -1,0 +1,539 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Lizzy Tech Solutions API",
+    "description": "This is the documentation of Lizzy Tech Solutions File Sharing Platform",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "schemes": ["http", "https"],
+  "servers": [{ "url": "/api", "description": "Live " }],
+  "tags": [
+    { "name": "Auth" },
+    { "name": "Users" },
+    { "name": "BusinessFiles" }
+  ],
+  "basePath": "/api",
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Retrieve all users",
+        "parameters": [],
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [{ "token_auth": [] }]
+      }
+    },
+    "/files": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": { "type": "integer" }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "tags": ["BusinessFiles"],
+        "summary": "Get All Business Files",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessFilesResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [{ "token_auth": [] }]
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "parameters": [],
+        "tags": ["BusinessFiles"],
+        "summary": "Upload a file",
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FileResponse" }
+              }
+            },
+            "description": "Uploaded"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": ["title", "file", "description"]
+              }
+            }
+          },
+          "required": true
+        },
+        "consumes": ["multipart/form-data"],
+        "security": [{ "token_auth": [] }]
+      }
+    },
+    "/files/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": { "type": "integer" },
+            "required": true
+          }
+        ],
+        "tags": ["BusinessFiles"],
+        "summary": "Retrieve a file by id",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FileResponse" }
+              }
+            },
+            "description": "OK"
+          },
+          "404": { "description": "File not found" }
+        },
+        "security": [{ "token_auth": [] }]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": { "type": "integer" },
+            "required": true
+          }
+        ],
+        "tags": ["BusinessFiles"],
+        "summary": "Update a file",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FileResponse" }
+              }
+            },
+            "description": "Updated"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "consumes": ["multipart/form-data"],
+        "security": [{ "token_auth": [] }]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": { "type": "integer" },
+            "required": true
+          }
+        ],
+        "tags": ["BusinessFiles"],
+        "summary": "Delete a file",
+        "responses": {
+          "200": { "description": "File Deleted successfully" },
+          "403": { "description": "Not allowed to delete the file" }
+        },
+        "security": [{ "token_auth": [] }]
+      }
+    },
+    "/files/{id}/all/details": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": { "type": "integer" },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": { "type": "integer" }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "tags": ["BusinessFiles"],
+        "summary": "Get Download Details of a files",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllDownloadDetailsResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [{ "token_auth": [] }]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "parameters": [],
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            },
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/User" }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "parameters": [],
+        "tags": ["Auth"],
+        "summary": "Login User",
+        "description": "The login token is returned in the body of the request.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            },
+            "description": "OK"
+          },
+          "401": { "description": "Invalid credentials" }
+        },
+        "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            },
+            "required": true
+          }
+        
+      }
+    },
+    "/auth/forgotpassword": {
+      "post": {
+        "parameters": [],
+        "tags": ["Auth"],
+        "summary": "Request a password reset",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "string" },
+                    "message": { "type": "string" },
+                    "data": { "type": "string" },
+                    "paginationInfo": { "type": "string" }
+                  }
+                }
+              }
+            },
+            "description": "Password reset email sent"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/auth/reset_password": {
+      "post": {
+        "parameters": [],
+        "tags": ["Auth"],
+        "summary": "Reset a user password",
+        "responses": {
+          "204": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": { "type": "string" },
+                    "paginationInfo": { "type": "string" }
+                  },
+                  "required": ["email", "password", "token"]
+                }
+              }
+            },
+            "description": "Password reset successful"
+          },
+          "401": { "description": "Invalid or expired Token" }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string", "minLength": 5 },
+                  "token": { "type": "string" }
+                },
+                "required": ["email", "password", "token"]
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "schema": { "type": "string" },
+            "required": true
+          }
+        ],
+        "tags": ["BusinessFiles"],
+        "summary": "Search for A file",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessFilesResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [{ "token_auth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "email": { "type": "string" },
+          "password": { "type": "string", "writeOnly": true, "minLength": 3 },
+          "role": { "type": "number", "readOnly": true },
+          "isVerified": { "type": "boolean", "readOnly": true }
+        },
+        "required": ["email", "password"]
+      },
+      "BusinessFile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "readOnly": true },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "file": { "type": "string", "readOnly": true },
+          "dateAdded": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "required": ["title", "description", "file"]
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "currentPage": { "type": "integer" },
+          "pageSize": { "type": "integer" },
+          "totalItems": { "type": "integer" },
+          "pages": { "type": "integer", "readOnly": true },
+          "hasNext": { "type": "boolean", "readOnly": true },
+          "hasPrevious": { "type": "boolean", "readOnly": true }
+        }
+      },
+      "BusinessFilesResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/BusinessFile" }
+          },
+          "paginationInfo": { "$ref": "#/components/schemas/Pagination" }
+        }
+      },
+      "FileResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "$ref": "#/components/schemas/BusinessFile"
+          },
+          "paginationInfo": { "type": "string" }
+        }
+      },
+      "AllDownloadDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "file": { "type": "string" },
+                "dateAdded": { "type": "string", "format": "date-time" },
+                "downloads": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "downloadDate": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "email": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "recipientEmail": { "type": "string" },
+                          "sendDate": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "paginationInfo": { "$ref": "#/components/schemas/Pagination" }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "$ref": "#/components/schemas/User"
+          },
+          "paginationInfo": { "type": "string" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": { "$ref": "#/components/schemas/User" },
+              "accessToken": { "type": "string" }
+            }
+          },
+          "paginationInfo": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "token_auth": { "type": "http", "scheme": "bearer" }
+    }
+  }
+}

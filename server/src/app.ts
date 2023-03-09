@@ -6,6 +6,8 @@ import filesRouter from "./routers/businessFilesRouter";
 import authRouter from "./routers/authRouter";
 import utilsRouter from "./routers/utilsRouter"
 import { ErrorHandler } from "./middlewares/ErrorHandler";
+import swaggerUI from "swagger-ui-express"
+import * as swaggerDocument from "./swagger.json"
 
 const app: Express = express();
 
@@ -22,6 +24,9 @@ app.use("/api/users", usersRouter);
 app.use("/api/files", filesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/search", utilsRouter);
+
+// swwagger docs
+app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 // end region routes
 
