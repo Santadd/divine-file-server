@@ -18,7 +18,7 @@ export class CreateDownloadsTable1677578291185 implements MigrationInterface {
                     {
                         name: "businessfileId",
                         type: "int",
-                        isNullable: false
+                        isNullable: true
                     },
                     {
                         name: "userId",
@@ -42,7 +42,8 @@ export class CreateDownloadsTable1677578291185 implements MigrationInterface {
                 new TableForeignKey({
                     columnNames: ["businessfileId"],
                     referencedColumnNames: ["id"],
-                    referencedTableName: DBTable.BUSINESSFILES
+                    referencedTableName: DBTable.BUSINESSFILES,
+                    onDelete: "SET NULL"
                 }),
 
                 new TableForeignKey({
