@@ -9,7 +9,7 @@ This is a solution to AmaliTech's Training Phase 3 challenge.
 - [Overview](#overview)
   - [Requirements](#requirements)
   - [Screenshots](#screenshots)
-  - [ER Diagram](#erdiagram)
+  - [ER Diagram](#er-diagram)
   - [Link](#link)
 - [Design Process](#design-process)
   - [Built with](#built-with)
